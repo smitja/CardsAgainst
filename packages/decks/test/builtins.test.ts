@@ -10,12 +10,12 @@ import {
 } from '../src/index.ts';
 
 describe('mazzo di casa', () => {
-  it('è il mazzo predefinito, con le 202 bianche dei PDF senza doppioni', () => {
+  it('è il mazzo predefinito, con le 296 bianche dei PDF senza doppioni', () => {
     expect(DEFAULT_DECKS).toEqual(['cirelli']);
     expect(BUILTIN_DECKS.cirelli).toBe(CIRELLI_DECK);
-    expect(CIRELLI_DECK.white).toHaveLength(202);
-    expect(new Set(CIRELLI_DECK.white.map((c) => dedupeKey(c.text))).size).toBe(202);
-    expect(CIRELLI_DECK.black).toHaveLength(84);
+    expect(CIRELLI_DECK.white).toHaveLength(296);
+    expect(new Set(CIRELLI_DECK.white.map((c) => dedupeKey(c.text))).size).toBe(296);
+    expect(CIRELLI_DECK.black).toHaveLength(85);
     expect(CIRELLI_DECK.black.filter((c) => c.pick === 2)).toHaveLength(7);
     expect(CIRELLI_DECK.black.filter((c) => c.pick === 3)).toHaveLength(2);
   });
@@ -29,13 +29,20 @@ describe('mazzo di casa', () => {
   it('le domande su più righe restano intere e gli spazi si staccano dalle parole', () => {
     const texts = CIRELLI_DECK.black.map((c) => c.text);
     expect(texts).toContain('Ho preso un nuovo gatto. Carino! Come si chiama? ___');
-    expect(texts).toContain('___ è la categoria porno preferita Valerio Montesarchio.');
+    // Prima riga sopra il margine della pagina e punteggiatura staccata.
+    expect(texts).toContain('Giovanni ti ha memorizzato in rubrica come ___');
+    expect(texts).toContain('Simone ha creato un’app per ___, incredibile!');
+    const whites = CIRELLI_DECK.white.map((c) => c.text);
+    // Parole con a capo interno nel PDF.
+    expect(whites).toContain('La tragedia di Crans-Montana');
+    expect(whites).toContain('Amaro Gabriele Lucano');
+    expect(texts).toContain('___ è la categoria porno preferita da Valerio Montesarchio.');
   });
 
   it('si combina con il mazzo base', () => {
     const cards = combineDecks([CIRELLI_DECK, BUILTIN_DECKS.demo as typeof CIRELLI_DECK]);
-    expect(cards.white).toHaveLength(302);
-    expect(cards.black).toHaveLength(114);
+    expect(cards.white).toHaveLength(396);
+    expect(cards.black).toHaveLength(115);
   });
 });
 

@@ -14,6 +14,8 @@ export function normalizeCardText(text: string): string {
       // Uno spazio attaccato a una parola ("___è") si stacca: "___ è".
       .replace(/___(?=[\p{L}\p{N}])/gu, '___ ')
       .replace(/(?<=[\p{L}\p{N}])___/gu, ' ___')
+      // Niente spazio prima della punteggiatura ("___ , incredibile" diventa "___, incredibile").
+      .replace(/ +([,.;:!?])/g, '$1')
   );
 }
 

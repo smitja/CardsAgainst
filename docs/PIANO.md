@@ -16,7 +16,7 @@
 Quindi: **client Vite + React** (TypeScript strict, Tailwind v4, Motion), **server Node** (HTTP + WebSocket con `ws`, stanze in memoria con istantanee su database), **SQL portabile** (SQLite in locale, Postgres in produzione tramite `DATABASE_URL`, migrazioni in SQL puro). Motore e protocollo non cambiano: se GPT Work preferisce un suo sistema realtime, deve solo implementare il protocollo documentato. Il pacchetto include `HANDOFF.md` per chi lo installa (variabili d'ambiente, schema del database, vincolo di una sola istanza o instradamento per codice stanza).
 
 ### Mazzo predefinito (dopo la Fase 3)
-- Il mazzo attivo di default in ogni stanza è **Cards Against Cirelli**: 84 domande (75 da una carta, 7 da due, 2 da tre) e 202 risposte, tutte dai PDF del gruppo e senza doppioni, importate con `scripts/pdf-cards.py`.
+- Il mazzo attivo di default in ogni stanza è **Cards Against Cirelli**: 85 domande (76 da una carta, 7 da due, 2 da tre) e 296 risposte, tutte dai PDF del gruppo e senza doppioni, importate con `scripts/pdf-cards.py`.
 - Il mazzo base originale resta attivabile in lobby; l'host può anche aggiungere mazzi custom con il codice (editor nella Fase 5).
 - A metà frase le risposte che iniziano con articolo, preposizione o verbo all'infinito passano in minuscolo; nomi propri e sigle restano.
 

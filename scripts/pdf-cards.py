@@ -28,8 +28,9 @@ def cards_in(path):
     xml = subprocess.run(['pdftotext', '-bbox', path, '-'], capture_output=True, text=True, check=True).stdout
     for page in xml.split('<page ')[1:]:
         columns = {}
-        for m in re.finditer(r'<word xMin="([\d.]+)" yMin="([\d.]+)"[^>]*>(.*?)</word>', page):
-            x, y, word = float(m.group(1)), float(m.group(2)), html.unescape(m.group(3))
+        # Coordinate anche negative (testo che sborda dal margine) e parole con a capo interni.
+        for m in re.finditer(r'<word xMin="(-?[\d.]+)" yMin="(-?[\d.]+)"[^>]*>(.*?)</word>', page, re.S):
+            x, y, word = float(m.group(1)), float(m.group(2)), html.unescape(m.group(3)).strip()
             columns.setdefault(int(x // COLUMN_WIDTH), []).append((y, x, word))
         # Inizi possibili: dopo un salto verticale. Sono inizi veri solo quelli allineati in
         # almeno due colonne (le carte della stessa riga partono alla stessa altezza): così le
