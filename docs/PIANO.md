@@ -25,7 +25,7 @@ Design read: _app di gioco mobile per gruppi di amici adulti, linguaggio irriver
 
 ---
 
-## Tre nomi
+## Tre nomi proposti (scelto poi: Cards Against Cirelli)
 
 1. **Tappabuchi** (consigliato): chi riempie i buchi, e i buchi sono gli "___". Dice la meccanica in una parola, suona italiano e un po' sfacciato.
 2. **Malalingua**: dice il tono, meno la meccanica.
