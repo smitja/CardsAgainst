@@ -5,7 +5,16 @@ const BLANK_RUN = /_{3,}/g;
 
 /** Testo pulito: spazi compressi, ogni sequenza di tre o più trattini bassi diventa "___". */
 export function normalizeCardText(text: string): string {
-  return text.normalize('NFC').replace(/\s+/g, ' ').trim().replace(BLANK_RUN, BLANK);
+  return (
+    text
+      .normalize('NFC')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(BLANK_RUN, BLANK)
+      // Uno spazio attaccato a una parola ("___è") si stacca: "___ è".
+      .replace(/___(?=[\p{L}\p{N}])/gu, '___ ')
+      .replace(/(?<=[\p{L}\p{N}])___/gu, ' ___')
+  );
 }
 
 export function countBlanks(text: string): number {

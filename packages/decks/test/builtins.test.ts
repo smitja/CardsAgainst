@@ -15,7 +15,9 @@ describe('mazzo di casa', () => {
     expect(BUILTIN_DECKS.cirelli).toBe(CIRELLI_DECK);
     expect(CIRELLI_DECK.white).toHaveLength(202);
     expect(new Set(CIRELLI_DECK.white.map((c) => dedupeKey(c.text))).size).toBe(202);
-    expect(CIRELLI_DECK.black.length).toBeGreaterThanOrEqual(30);
+    expect(CIRELLI_DECK.black).toHaveLength(84);
+    expect(CIRELLI_DECK.black.filter((c) => c.pick === 2)).toHaveLength(7);
+    expect(CIRELLI_DECK.black.filter((c) => c.pick === 3)).toHaveLength(2);
   });
 
   it('non contiene più i glifi sbagliati dell’estrazione', () => {
@@ -24,10 +26,16 @@ describe('mazzo di casa', () => {
     expect(all).toContain('Fare l’occhiolino a persone anziane');
   });
 
-  it('si combina con il mazzo base senza duplicare le nere', () => {
+  it('le domande su più righe restano intere e gli spazi si staccano dalle parole', () => {
+    const texts = CIRELLI_DECK.black.map((c) => c.text);
+    expect(texts).toContain('Ho preso un nuovo gatto. Carino! Come si chiama? ___');
+    expect(texts).toContain('___ è la categoria porno preferita Valerio Montesarchio.');
+  });
+
+  it('si combina con il mazzo base', () => {
     const cards = combineDecks([CIRELLI_DECK, BUILTIN_DECKS.demo as typeof CIRELLI_DECK]);
     expect(cards.white).toHaveLength(302);
-    expect(cards.black).toHaveLength(CIRELLI_DECK.black.length);
+    expect(cards.black).toHaveLength(114);
   });
 });
 

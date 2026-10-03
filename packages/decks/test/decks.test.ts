@@ -19,6 +19,9 @@ describe('testo delle carte', () => {
       'Il mio ___ preferito è ___.',
     );
     expect(normalizeCardText('un_trattino e __ due')).toBe('un_trattino e __ due');
+    expect(normalizeCardText('_______è la mia passione, con____')).toBe(
+      '___ è la mia passione, con ___',
+    );
   });
 
   it('conta gli spazi e ricava le carte da giocare', () => {

@@ -14,7 +14,8 @@ import sys
 import unicodedata
 
 COLUMN_WIDTH = 198.4  # A4 a tre colonne
-CARD_GAP = 40  # salto verticale (pt) che separa due carte nella stessa colonna
+LINE_GAP = 30  # oltre questo salto verticale può iniziare una nuova carta
+ALIGN = 3  # tolleranza (pt) per dire che due carte iniziano alla stessa altezza
 
 # Glifi sbagliati tipici di questi PDF.
 FIXES = [
@@ -30,16 +31,30 @@ def cards_in(path):
         for m in re.finditer(r'<word xMin="([\d.]+)" yMin="([\d.]+)"[^>]*>(.*?)</word>', page):
             x, y, word = float(m.group(1)), float(m.group(2)), html.unescape(m.group(3))
             columns.setdefault(int(x // COLUMN_WIDTH), []).append((y, x, word))
-        cells = []
+        # Inizi possibili: dopo un salto verticale. Sono inizi veri solo quelli allineati in
+        # almeno due colonne (le carte della stessa riga partono alla stessa altezza): così le
+        # righe vuote dentro una carta non la spezzano.
+        candidates = {}
         for col, words in columns.items():
             words.sort()
-            card, last = [], None
+            last = None
+            for y, _, _ in words:
+                if last is None or y - last > LINE_GAP:
+                    candidates.setdefault(col, []).append(y)
+                last = y
+        def aligned(y, col):
+            return sum(
+                1 for other, ys in candidates.items() if other != col and any(abs(y - z) <= ALIGN for z in ys)
+            ) >= 1
+        cells = []
+        for col, words in columns.items():
+            card = []
             for y, x, w in words:
-                if last is not None and y - last > CARD_GAP:
+                new_line = card and y != card[-1][0]
+                if new_line and y in candidates.get(col, []) and aligned(y, col):
                     cells.append((card[0][0], col, card))
                     card = []
                 card.append((y, x, w))
-                last = y
             if card:
                 cells.append((card[0][0], col, card))
         cells.sort(key=lambda c: (round(c[0] / 50), c[1]))

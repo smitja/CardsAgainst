@@ -1,10 +1,8 @@
-import { DEMO_DECK } from './demo.ts';
 import { DeckSchema, type Deck, type DeckInput } from './schema.ts';
 
 /**
- * Il mazzo di casa: le carte bianche vengono dai PDF stampabili del gruppo
- * (azioni e "nomi e cose"), importate con scripts/pdf-cards.py.
- * Le nere sono provvisorie (quelle del mazzo base) finché non arrivano le domande originali.
+ * Il mazzo di casa: domande e risposte vengono dai PDF stampabili del gruppo
+ * (Domande, azioni, "nomi e cose"), importate con scripts/pdf-cards.py.
  */
 const raw: DeckInput = {
   schemaVersion: 1,
@@ -12,7 +10,114 @@ const raw: DeckInput = {
   name: 'Cards Against Cirelli',
   language: 'it',
   description: 'Il mazzo di casa Cirelli.',
-  black: DEMO_DECK.black.map(({ text }) => ({ text })),
+  black: [
+    { text: 'La mattina, Calabrese è solita lavarsi il culo con ___________' },
+    { text: '_____ e _____ tutta la notte' },
+    { text: 'Buon natale a te e pure a quello/a stronzo/a di _______' },
+    { text: 'Durante una pippa penso sempre a ______' },
+    { text: 'Ho preso un nuovo gatto. Carino! Come si chiama? ___________' },
+    { text: 'Il 3 ottobre gli italiani scenderanno in piazza per protestare a favore d* ______' },
+    { text: 'Nelle sue playlist non può mancare proprio _________' },
+    { text: 'La mattina non possono mancare latte al cacao, cereali, caffè e ________' },
+    { text: 'Questa tisana serve a ___________' },
+    {
+      text: 'Simo che fai oggi? “Mah guarda alle 15:00 ho una call, alle 17:00 devo _________ fino alle 21:00, poi ci sono”',
+    },
+    { text: 'Scrivere a c’è posta per te solo per _________ in diretta nazionale' },
+    {
+      text: 'Quando Alessandro ha letto le carte mi ha rivelato che domani dovrà ________________',
+    },
+    { text: 'Gabriel non fa mai mancare ____________ quando c’è Simone' },
+    { text: 'Quando nient’altro funziona, posso sempre masturbarmi con ________' },
+    { text: 'Questo mese su Donna Moderna: "Riaccendi il desiderio con ________ "' },
+    {
+      text: 'Un colloquio di lavoro di successo inizia con una solida stretta di mano e finisce con ________',
+    },
+    { text: 'Mi aiuti dottore, ho ________ dentro il culo!' },
+    {
+      text: 'Mi faccio il culo tutto il giorno per la mia famiglia, e quando torno a casa devo trovare ________!?',
+    },
+    { text: 'Simone Ciocca una volta ha portato un cosplay di _____' },
+    { text: 'Girano voci che al Vaticano ci sia una stanza segreta per ________' },
+    { text: 'Simone ha creato un’app per ____________ incredibile!' },
+    { text: 'Caro Cioè, ho difficoltà con ________ e vorrei qualche consiglio' },
+    { text: '___________ è il mio nuovo fetish' },
+    { text: '________ : testato dai bambini, approvato dalle mamme' },
+    { text: 'Da quando Cirelli si è fidanzato, Tocci ha iniziato a _________ senza di lui.' },
+    { text: 'Un cono tre gusti per favore: cioccolato, limone e ______.' },
+    {
+      text: 'Durante la vacanza in Trentino, Falzarano ha diviso il letto con ________ che ha scorreggiato tutta la notte.',
+    },
+    { text: 'Il nuovo corso che si terrà al Cantiere dell’arte insegnerà ai bambini a _____.' },
+    { text: 'Non diresti mai che Cesare in realtà è un ____________.' },
+    { text: 'Il lavoro segreto di Gabriel Gambino è ________.' },
+    { text: 'Sul palco del Priverno Comics, Cirelli si è divertito a ______.' },
+    {
+      text: 'Il nuovo video di Futuro Nazionale vede come protagonista _____ che _____ con dei migranti.',
+    },
+    { text: 'Giorgia Meloni ha girato un porno con ________.' },
+    { text: 'Al prossimo nerd fest, l’ospite principale dovrà ________.' },
+    { text: 'Il segreto per rimanere giovani è semplicemente _______.' },
+    { text: 'La canna perfetta si rolla a bandiera, la sega perfetta si fa con ________.' },
+    { text: 'Al Latina Comics non mancherà di certo ________.' },
+    { text: '_______è la categoria porno preferita Valerio Montesarchio.' },
+    { text: 'Come fanno Daniele e Francesca a stare insieme da più di 12 anni? _____' },
+    {
+      text: 'Giovanni quando si ferma al mcdonald’s prende sempre un mc menù large a base di _____, _____ e coca cola.',
+    },
+    { text: 'Claudia ha iniziato a insegnare teatro per __________.' },
+    { text: 'Per me una pasta con tonno e _____.' },
+    { text: 'Non sono razzista ma non sopporto proprio ______.' },
+    { text: 'Quest’anno a condurre Sanremo ci sarà ______.' },
+    { text: 'La nuova legge di Fratelli d’Italia legalizzerà ____ nelle scuole.' },
+    { text: 'Per aprire il forziere devi recitare “Tisca, tusca, _______!”' },
+    { text: 'Hanno trovato ________ nel portabagagli di Denise.' },
+    { text: '_______ è il modo con cui Tocci corteggia una ragazza.' },
+    { text: 'Cosa fa Alessandro Federici quando non scrocca? _______' },
+    { text: 'Il vero motivo per cui Israele finanzia l’ai è per ________.' },
+    { text: 'Ogni volta che siamo in saletta succede sempre che ________.' },
+    { text: 'Sono un autolesionista, basta con _______, disse Totani.' },
+    { text: 'Quando Daniele gira una canna, ma si parla di ______, smette di rollare.' },
+    { text: 'Francesca Candeli non si arrabbia mai, ma quando si arrabbia potrebbe ____________.' },
+    { text: 'Non siete più il mio ________.' },
+    { text: 'Cantami o diva del _________.' },
+    { text: 'L’ultima ricerca google di Simone Ciocca è stata _________.' },
+    { text: 'La volante dei carabinieri ci ha chiesto ________ con gli auguri al festeggiato.' },
+    { text: 'Sopra la panca la capra _______, sotto la panca _______ _______' },
+    { text: 'Il nuovo programma della Lega prevede _____, _______, e tant* _______.' },
+    { text: 'Qual è la tua/il tuo ________. Un nuovo libro firmato Fabio Mattocci.' },
+    { text: 'Per torturare i civili palestinesi, l’IDF usano _____________.' },
+    {
+      text: 'Il prossimo spettacolo con la regia di Claudia Casale, si chiamerà ______. Interpretato da _________.',
+    },
+    { text: 'Alessandro Federici è risultato essere dipendente da ____________.' },
+    {
+      text: 'Benvenuti ad una nuova puntata di Chi L’ha Visto, oggi parliamo della scomparsa di _________.',
+    },
+    { text: 'Nel gioco della sigaretta spesso _______ e ______ capitano sempre insieme.' },
+    { text: 'Mamma! Mamma! Guarda laggiù c’è ____________ che si diverte a ____________!' },
+    { text: 'Il segreto della velocità di Usain Bolt sta nel __________.' },
+    { text: '________ è il motivo per cui Astro è sempre in ritardo.' },
+    { text: 'La telecamera di Mauro durante il campeggio ha ripreso _____ mentre ________.' },
+    { text: 'Luca lo presti non saprà usare il pc ma sa benissimo come ________.' },
+    { text: 'Il sogno proibito di Giovanni Contestabile è _________.' },
+    { text: '__________ è la categoria porno preferita da Simone' },
+    { text: 'Dopo essere svenuto al capodanno, Simone è stato svegliato da ________' },
+    { text: 'Simone ha il sogno di duettare con __________' },
+    { text: 'I soldi non compreranno l’amore, lui può sicuramente comprare ________' },
+    { text: 'A Latina Fiori sta aprendo un negozio dove vendono ______' },
+    {
+      text: 'Mentre gli Stati Uniti bombardano l’Iran, Simone pensa che ci voglia _________ per salvare il mondo.',
+    },
+    { text: 'Al primo appuntamento è sempre buona educazione _______' },
+    { text: 'La scienza non spiegherà mai l’origine di ________' },
+    {
+      text: 'Mia mamma è impazzita quando nella cronologia del mio browser ha visto ________ .com',
+    },
+    { text: 'Nel settimo girone infernale, i peccatori devono subire ________ per l’eternità' },
+    { text: 'Nella prossima puntata di Rai Educational: Come parlare a tuo figlio di ________' },
+    { text: 'Parla il capitano. Allacciate le cinture e preparatevi per ________' },
+  ],
   white: [
     { text: 'Il lavandino sborrato da Valerio Montesarchio' },
     { text: 'Lasciare un messaggio imbarazzante in segreteria' },
