@@ -7,14 +7,15 @@ import {
   composeSentence,
   dedupeKey,
   fitAnswer,
+  guessKind,
 } from '../src/index.ts';
 
 describe('mazzo di casa', () => {
-  it('è il mazzo predefinito, con le 296 bianche dei PDF senza doppioni', () => {
+  it('è il mazzo predefinito, con le 343 bianche dei PDF senza doppioni', () => {
     expect(DEFAULT_DECKS).toEqual(['cirelli']);
     expect(BUILTIN_DECKS.cirelli).toBe(CIRELLI_DECK);
-    expect(CIRELLI_DECK.white).toHaveLength(296);
-    expect(new Set(CIRELLI_DECK.white.map((c) => dedupeKey(c.text))).size).toBe(296);
+    expect(CIRELLI_DECK.white).toHaveLength(343);
+    expect(new Set(CIRELLI_DECK.white.map((c) => dedupeKey(c.text))).size).toBe(343);
     expect(CIRELLI_DECK.black).toHaveLength(85);
     expect(CIRELLI_DECK.black.filter((c) => c.pick === 2)).toHaveLength(7);
     expect(CIRELLI_DECK.black.filter((c) => c.pick === 3)).toHaveLength(2);
@@ -41,8 +42,45 @@ describe('mazzo di casa', () => {
 
   it('si combina con il mazzo base', () => {
     const cards = combineDecks([CIRELLI_DECK, BUILTIN_DECKS.demo as typeof CIRELLI_DECK]);
-    expect(cards.white).toHaveLength(396);
+    expect(cards.white).toHaveLength(443);
     expect(cards.black).toHaveLength(115);
+  });
+});
+
+describe('categoria delle carte bianche', () => {
+  it('riconosce azioni e nomi dalla frase', () => {
+    const cases: [string, 'action' | 'thing'][] = [
+      ['Brindare alla figa', 'action'],
+      ['Farsi leggere i tarocchi da Alessandro Federici', 'action'],
+      ['Farsela addosso', 'action'],
+      ['Proporsi come animatore alle case di riposo', 'action'],
+      ['Comporre una versione jazz di Faccetta Nera', 'action'],
+      ['Sottomettersi sessualmente ad Elon Musk', 'action'],
+      ['Molestare Bruno Vespa a Montecitorio', 'action'],
+      ['Aver paura dei vicoli bui', 'action'],
+      ['Starnutire, scoreggiare, ed eiaculare nello stesso istante', 'action'],
+      ['Carlo Verdone', 'thing'],
+      ['Giancarlo Magalli fatto di crack', 'thing'],
+      ['Benjamin Netanyahu', 'thing'],
+      ['Fentanyl', 'thing'],
+      ['Il lavandino sborrato da Valerio Montesarchio', 'thing'],
+      ['Cesare Cremonini', 'thing'],
+      ['Due nani che stanno cagando in un secchio', 'thing'],
+    ];
+    for (const [text, kind] of cases) expect([text, guessKind(text)]).toEqual([text, kind]);
+  });
+
+  it('il mazzo di casa è circa metà azioni e metà nomi', () => {
+    const actions = CIRELLI_DECK.white.filter((c) => c.kind === 'action').length;
+    expect(actions).toBe(172);
+    expect(CIRELLI_DECK.white.length - actions).toBe(171);
+  });
+
+  it('una categoria esplicita vince sulla frase', () => {
+    expect(
+      combineDecks([{ ...CIRELLI_DECK, white: [{ text: 'Brindare', kind: 'thing' }] }]).white[0]
+        ?.kind,
+    ).toBe('thing');
   });
 });
 

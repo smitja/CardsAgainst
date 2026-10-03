@@ -1,4 +1,4 @@
-import type { PickCount } from '@cirelli/engine';
+import type { CardKind, PickCount } from '@cirelli/engine';
 
 export const BLANK = '___';
 const BLANK_RUN = /_{3,}/g;
@@ -115,4 +115,29 @@ export function fillSegments(black: string, answers: (string | undefined)[]): Fi
     before += value;
     return { kind: 'answer', index: seg.index, value };
   });
+}
+
+/** Infinito pieno, anche riflessivo: "mangiare", "farsi" no (vedi sotto), "sottomettersi", "proporre". */
+const INFINITIVE = /^[a-zà-ù]+(?:are|ere|ire|orre|urre|arre)(?:si|sela)?$/;
+/**
+ * Infinito tronco con pronome attaccato ("farsi", "farsela", "proporsi", "mangiarlo") o tronco
+ * ("aver", "far"). È ambiguo con alcuni nomi ("Carlo", "Giancarlo"): vale solo se la parola dopo
+ * non è maiuscola.
+ */
+const CLITIC_INFINITIVE =
+  /^(?:[a-zà-ù]+(?:ar|er|ir|or|ur)(?:si|sela|la|lo|le|li|ne|ci|gli|mi|ti|vi)|aver|esser|far|dir)$/;
+/** Nomi propri che finiscono come un infinito. */
+const NAME_LIKE_INFINITIVE = new Set(['cesare']);
+
+/**
+ * Categoria di una carta bianca: `action` se comincia con un verbo all'infinito
+ * ("Brindare alla figa", "Farsi leggere i tarocchi"), altrimenti `thing`.
+ */
+export function guessKind(text: string): CardKind {
+  const words = normalizeCardText(text).split(' ');
+  const first = (/^\p{L}+/u.exec(words[0] ?? '')?.[0] ?? '').toLocaleLowerCase('it');
+  if (NAME_LIKE_INFINITIVE.has(first)) return 'thing';
+  if (INFINITIVE.test(first)) return 'action';
+  const nextIsName = /^\p{Lu}/u.test(words[1] ?? '');
+  return CLITIC_INFINITIVE.test(first) && !nextIsName ? 'action' : 'thing';
 }

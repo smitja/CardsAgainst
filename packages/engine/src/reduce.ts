@@ -14,6 +14,7 @@ import { nextRandom } from './rng.ts';
 import type {
   BlackCard,
   CardId,
+  CardKind,
   EndReason,
   ErrorCode,
   GameConfig,
@@ -225,17 +226,77 @@ function setDeadline(ctx: Ctx, ms: number | null): void {
 
 /* ----------------------------------------------------------------- mazzo */
 
-function drawWhite(ctx: Ctx, n: number): CardId[] {
-  const { piles } = ctx.d;
+/** Quota di ogni categoria fra tutte le carte bianche con categoria (azioni e nomi). */
+function kindShares(d: GameState): Map<CardKind, number> {
+  const counts = new Map<CardKind, number>();
+  let total = 0;
+  for (const card of Object.values(d.cards.white)) {
+    if (!card.kind) continue;
+    counts.set(card.kind, (counts.get(card.kind) ?? 0) + 1);
+    total += 1;
+  }
+  for (const [k, v] of counts) counts.set(k, v / total);
+  return counts;
+}
+
+/**
+ * Categoria che manca di più nella mano rispetto alla composizione del mazzo, o null se la mano
+ * è già in equilibrio (allora si pesca semplicemente la prima carta, che è casuale).
+ */
+function wantedKind(d: GameState, hand: CardId[], shares: Map<CardKind, number>): CardKind | null {
+  if (shares.size < 2) return null;
+  const have = new Map<CardKind, number>();
+  let tagged = 1; // la carta che sta per arrivare
+  for (const id of hand) {
+    const kind = d.cards.white[id]?.kind;
+    if (!kind) continue;
+    have.set(kind, (have.get(kind) ?? 0) + 1);
+    tagged += 1;
+  }
+  let best: CardKind | null = null;
+  let bestGap = 0;
+  let tie = false;
+  for (const [kind, share] of shares) {
+    const gap = share * tagged - (have.get(kind) ?? 0);
+    if (best === null || gap > bestGap) {
+      best = kind;
+      bestGap = gap;
+      tie = false;
+    } else if (gap === bestGap) {
+      tie = true;
+    }
+  }
+  return tie ? null : best;
+}
+
+/**
+ * Pesca n carte bianche. Con `hand` la pesca è bilanciata: fra le carte del mazzo (già mescolato)
+ * prende la prima della categoria che manca di più nella mano, così nessuno si ritrova solo con
+ * azioni o solo con nomi. Senza categorie si pesca dalla cima come sempre.
+ */
+function drawWhite(ctx: Ctx, n: number, hand: CardId[] = []): CardId[] {
+  const { d } = ctx;
+  const shares = kindShares(d);
   const out: CardId[] = [];
   while (out.length < n) {
-    if (piles.whiteDraw.length === 0) {
-      if (piles.whiteDiscard.length === 0) break;
-      piles.whiteDraw = shuffle(ctx.d, piles.whiteDiscard);
-      piles.whiteDiscard = [];
+    if (d.piles.whiteDraw.length === 0) {
+      if (d.piles.whiteDiscard.length === 0) break;
+      d.piles.whiteDraw = shuffle(d, d.piles.whiteDiscard);
+      d.piles.whiteDiscard = [];
       ctx.events.push({ type: 'reshuffled', pile: 'white' });
     }
-    out.push(piles.whiteDraw.pop() as CardId);
+    const pile = d.piles.whiteDraw;
+    const want = wantedKind(d, [...hand, ...out], shares);
+    let index = pile.length - 1;
+    if (want) {
+      for (let i = pile.length - 1; i >= 0; i--) {
+        if (d.cards.white[pile[i] as CardId]?.kind === want) {
+          index = i;
+          break;
+        }
+      }
+    }
+    out.push(pile.splice(index, 1)[0] as CardId);
   }
   return out;
 }
@@ -370,7 +431,10 @@ function loadCards(ctx: Ctx, by: SeatId, black: BlackCard[], white: WhiteCard[])
   for (const c of white) {
     const text = cleanText(c?.text, 300);
     if (typeof c?.id !== 'string' || !c.id || whiteMap[c.id] || !text || c.blank) fail('BAD_CARDS');
-    whiteMap[c.id] = { id: c.id, text };
+    whiteMap[c.id] =
+      c.kind === 'action' || c.kind === 'thing'
+        ? { id: c.id, text, kind: c.kind }
+        : { id: c.id, text };
   }
   ctx.d.cards = { black: blackMap, white: whiteMap };
 }
@@ -496,7 +560,7 @@ function startRound(ctx: Ctx): void {
 
   for (const p of [...d.players].sort(byOrder)) {
     const missing = d.config.handSize - p.hand.length;
-    if (missing > 0) p.hand.push(...drawWhite(ctx, missing));
+    if (missing > 0) p.hand.push(...drawWhite(ctx, missing, p.hand));
   }
 
   const participants = d.players

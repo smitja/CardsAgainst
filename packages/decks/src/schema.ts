@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { countBlanks, normalizeCardText, pickFor } from './text.ts';
+import { countBlanks, guessKind, normalizeCardText, pickFor } from './text.ts';
 
 export const DECK_SCHEMA_VERSION = 1;
 export const MAX_BLACK = 2000;
@@ -21,7 +21,13 @@ export const BlackCardSchema = z
   // Il numero di carte si ricava sempre dal testo: un valore diverso viene corretto.
   .transform(({ text }) => ({ text, pick: pickFor(text) }));
 
-export const WhiteCardSchema = z.object({ text: cardText(MAX_WHITE_TEXT) });
+export const WhiteCardSchema = z
+  .object({
+    text: cardText(MAX_WHITE_TEXT),
+    kind: z.enum(['action', 'thing']).optional(),
+  })
+  // Senza categoria esplicita la si ricava dalla frase (verbo all'infinito o no).
+  .transform(({ text, kind }) => ({ text, kind: kind ?? guessKind(text) }));
 
 export const DeckSchema = z.object({
   schemaVersion: z.literal(DECK_SCHEMA_VERSION),

@@ -15,7 +15,12 @@ export interface WhiteCard {
   text: string;
   /** Carta jolly: il testo lo scrive chi la gioca. */
   blank?: true;
+  /** Categoria grammaticale: serve a distribuire mani equilibrate fra azioni e nomi. */
+  kind?: CardKind;
 }
+
+/** `action`: frase con verbo all'infinito ("Brindare alla figa"); `thing`: nome o cosa. */
+export type CardKind = 'action' | 'thing';
 
 /**
  * lobby → dealing → choosing → revealing → judging → result → (dealing | ended).

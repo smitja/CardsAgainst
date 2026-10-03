@@ -28,7 +28,7 @@ export function combineDecks(decks: Deck[]): { black: BlackCard[]; white: WhiteC
       const key = dedupeKey(c.text);
       if (seenWhite.has(key)) return;
       seenWhite.add(key);
-      white.push({ id: `${deck.id}:w${i}`, text: c.text });
+      white.push({ id: `${deck.id}:w${i}`, text: c.text, kind: c.kind });
     });
   }
   return { black, white };

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { GHOST_ID } from '../src/index.ts';
-import { assertConservation, started } from './helpers.ts';
+import { assertConservation, lobby, makeWhite, started } from './helpers.ts';
 
 describe('giocatore fantasma', () => {
   it('entra all’avvio, gioca da solo e non giudica mai', () => {
@@ -252,5 +252,61 @@ describe('timer', () => {
     const before = JSON.stringify(g.state);
     g.tick(1_000_000);
     expect(JSON.stringify(g.state)).toBe(before);
+  });
+});
+
+describe('mani equilibrate fra azioni e nomi', () => {
+  const kinded = (n: number) =>
+    Array.from({ length: n }, (_, i) => ({
+      id: `w${i + 1}`,
+      text: `[W${i + 1}]`,
+      kind: (i % 2 === 0 ? 'action' : 'thing') as 'action' | 'thing',
+    }));
+
+  it('ogni mano ha metà azioni e metà nomi, anche dopo molti round', () => {
+    for (const seed of [1, 2, 3, 42, 99]) {
+      const g = started(5, { seed, white: kinded(120), config: { targetScore: 50 } });
+      for (let round = 0; round < 6; round++) {
+        for (const p of g.state.players) {
+          const actions = p.hand.filter((id) => g.state.cards.white[id]?.kind === 'action').length;
+          expect(Math.abs(actions - (p.hand.length - actions))).toBeLessThanOrEqual(2);
+        }
+        g.playRound();
+        g.do({ type: 'nextRound', by: 'p1' });
+        assertConservation(g.state);
+      }
+    }
+  });
+
+  it('segue le proporzioni del mazzo', () => {
+    // Un quarto azioni, tre quarti nomi: la mano iniziale ne riflette la composizione.
+    const white = Array.from({ length: 120 }, (_, i) => ({
+      id: `w${i + 1}`,
+      text: `[W${i + 1}]`,
+      kind: (i % 4 === 0 ? 'action' : 'thing') as 'action' | 'thing',
+    }));
+    const g = started(4, { white });
+    for (const p of g.state.players) {
+      const actions = p.hand.filter((id) => g.state.cards.white[id]?.kind === 'action').length;
+      expect(actions).toBeGreaterThanOrEqual(2);
+      expect(actions).toBeLessThanOrEqual(3);
+    }
+  });
+
+  it('senza categorie pesca dalla cima come prima', () => {
+    const a = started(4, { seed: 7 });
+    const b = started(4, { seed: 7, white: makeWhite(120) });
+    expect(a.state.players.map((p) => p.hand)).toEqual(b.state.players.map((p) => p.hand));
+  });
+
+  it('accetta solo categorie valide al caricamento', () => {
+    const g = lobby(3, {
+      white: [
+        { id: 'a', text: 'Brindare', kind: 'action' },
+        { id: 'b', text: 'Un piccione', kind: 'boh' as never },
+      ],
+    });
+    expect(g.state.cards.white.a?.kind).toBe('action');
+    expect(g.state.cards.white.b?.kind).toBeUndefined();
   });
 });
