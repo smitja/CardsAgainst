@@ -1,0 +1,23 @@
+{
+  "name": "cards-against-cirelli",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "pnpm -r test",
+    "typecheck": "tsc -b",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@vitest/coverage-v8": "^3.2.7",
+    "fast-check": "^4.10.2",
+    "prettier": "^3.9.9",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  }
+}

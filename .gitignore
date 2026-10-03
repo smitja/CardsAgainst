@@ -1,0 +1,11 @@
+node_modules
+dist
+dist-types
+coverage
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+*.db
+test-results
+playwright-report
