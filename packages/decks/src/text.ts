@@ -63,3 +63,26 @@ export function composeSentence(black: string, answers: string[]): string {
   });
   return out.replace(/\s+/g, ' ').trim();
 }
+
+export type FilledSegment =
+  | { kind: 'text'; value: string }
+  | { kind: 'answer'; index: number; value: string }
+  | { kind: 'blank'; index: number };
+
+/** Pezzi della carta nera con le risposte già adattate al punto in cui vanno (per disegnarle). */
+export function fillSegments(black: string, answers: (string | undefined)[]): FilledSegment[] {
+  const segments = segmentsOf(black);
+  let before = '';
+  return segments.map((seg, i) => {
+    if (seg.kind === 'text') {
+      before += seg.value;
+      return seg;
+    }
+    const answer = answers[seg.index];
+    if (!answer) return seg;
+    const next = segments[i + 1];
+    const value = fitAnswer(answer, before, next?.kind === 'text' ? next.value : '');
+    before += value;
+    return { kind: 'answer', index: seg.index, value };
+  });
+}

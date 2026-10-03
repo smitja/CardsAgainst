@@ -2,7 +2,8 @@ import { z } from 'zod';
 import type { ErrorCode, GameView } from '@cirelli/engine';
 import { ROOM_CODE_RE } from './room-code.ts';
 
-export const PROTOCOL_VERSION = 1;
+export { PROTOCOL_VERSION } from './version.ts';
+import { PROTOCOL_VERSION } from './version.ts';
 
 const id = z.string().min(1).max(64);
 const roomCode = z.string().regex(ROOM_CODE_RE);
@@ -99,7 +100,7 @@ export type ServerMessage =
   | { t: 'ack'; seq: number; ok: true }
   | { t: 'ack'; seq: number; ok: false; error: ErrorCode | ServerErrorCode }
   | { t: 'pong'; at: number; serverNow: number }
-  | { t: 'error'; code: ServerErrorCode; message: string };
+  | { t: 'error'; code: ServerErrorCode | ErrorCode; message: string };
 
 /** Lettura difensiva di un messaggio dal client. */
 export function parseClientMessage(raw: unknown): ClientMessage | null {

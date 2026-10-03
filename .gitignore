@@ -9,3 +9,4 @@ coverage
 *.db
 test-results
 playwright-report
+data

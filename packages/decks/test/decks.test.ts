@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  fillSegments,
   combineDecks,
   composeSentence,
   countBlanks,
@@ -69,6 +70,21 @@ const deck = (over: Partial<DeckInput> = {}): DeckInput => ({
   black: [{ text: 'Io e ___.' }, { text: '___ batte ___.', pick: 3 }],
   white: [{ text: 'il condominio' }, { text: 'mia zia' }],
   ...over,
+});
+
+describe('carta riempita', () => {
+  it('adatta le risposte e lascia gli spazi vuoti', () => {
+    expect(fillSegments('Che cosa mi tiene sveglio?', ['le bollette.'])).toEqual([
+      { kind: 'text', value: 'Che cosa mi tiene sveglio?' },
+      { kind: 'answer', index: 0, value: 'Le bollette.' },
+    ]);
+    expect(fillSegments('___ batte ___.', ['la nonna.'])).toEqual([
+      { kind: 'answer', index: 0, value: 'La nonna' },
+      { kind: 'text', value: ' batte ' },
+      { kind: 'blank', index: 1 },
+      { kind: 'text', value: '.' },
+    ]);
+  });
 });
 
 describe('schema del mazzo', () => {
