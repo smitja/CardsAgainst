@@ -1,0 +1,602 @@
+<title>Tappabuchi, tre direzioni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Anybody:wdth,wght@50..150,100..900&family=Big+Shoulders+Display:wght@600;800;900&family=Familjen+Grotesk:wght@400;600;700&family=Fragment+Mono&family=IBM+Plex+Mono:wght@500;600&family=Martian+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..24,500,1,0&icon_names=check,gavel,volume_up&display=block">
+<style>
+/* Layout: tavola di confronto. Per ogni direzione, scheda a sinistra e due telefoni a destra; su schermi stretti tutto in colonna. */
+:root {
+  --bg: #E7E8EA;
+  --fg: #17181B;
+  --muted: #50535A;
+  --line: #C6C8CD;
+  --bezel: #0D0E10;
+  --font: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Fragment Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* A. Ciclostile */
+  --a-paper: #DEDEDA; --a-card: #F6F6F3; --a-ink: #161616; --a-ink2: #4A4A48; --a-fluo: #FF3EA5;
+  --a-font: "Anybody", "Arial Narrow", sans-serif; --a-mono: "Fragment Mono", ui-monospace, monospace;
+  /* B. Bar Sport */
+  --b-table: #9CC7BA; --b-paper: #F7F6F1; --b-ink: #222220; --b-red: #C8102E;
+  --b-sign: "Alfa Slab One", Rockwell, Georgia, serif; --b-mono: "IBM Plex Mono", ui-monospace, monospace;
+  /* C. Tabellone */
+  --c-board: #121212; --c-flap: #1D1D1D; --c-plate: #F0EFEA; --c-yellow: #FFC20E; --c-dim: #8A8A86;
+  --c-font: "Big Shoulders Display", "Arial Narrow", sans-serif; --c-mono: "Martian Mono", ui-monospace, monospace;
+
+  --ease: cubic-bezier(.16, 1, .3, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #131416; --fg: #E8E9EC; --muted: #A2A5AC; --line: #2B2D32; --bezel: #050506; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #131416; --fg: #E8E9EC; --muted: #A2A5AC; --line: #2B2D32; --bezel: #050506; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--fg); font: 16px/1.5 var(--font); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 40px 72px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ms { font-family: "Material Symbols Sharp"; font-weight: normal; font-style: normal; font-size: 16px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; }
+:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+
+/* Testata */
+.intro { display: grid; gap: 14px; max-width: 64ch; margin-bottom: 40px; }
+.intro h1 { font-size: clamp(34px, 6vw, 52px); line-height: 1.02; letter-spacing: -.02em; font-weight: 700; }
+.intro p { color: var(--muted); }
+.jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.jump a { color: var(--fg); text-decoration: none; border: 1.5px solid var(--fg); border-radius: 2px; padding: 8px 14px; font-weight: 600; min-height: 44px; display: inline-flex; align-items: center; }
+.jump a:hover { background: var(--fg); color: var(--bg); }
+
+/* Sezioni */
+.dir { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; padding-block: 40px; border-top: 1.5px solid var(--line); align-items: start; }
+@media (max-width: 980px) { .dir { grid-template-columns: minmax(0, 1fr); } }
+.sheet { display: grid; gap: 18px; min-width: 0; }
+.sheet h2 { font-size: 30px; line-height: 1.1; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+.pick { font: 13px/1 var(--mono); border: 1.5px solid var(--fg); padding: 5px 8px; border-radius: 2px; }
+.sheet .lead { font-size: 18px; max-width: 46ch; }
+dl { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 8px 16px; margin: 0; }
+dt { font: 13px/1.6 var(--mono); color: var(--muted); }
+dd { margin: 0; min-width: 0; }
+@media (max-width: 520px) { dl { grid-template-columns: minmax(0, 1fr); gap: 2px; } dd { margin-bottom: 10px; } }
+.swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+.sw { display: grid; gap: 4px; font: 12px/1.2 var(--mono); color: var(--muted); }
+.sw i { display: block; width: 52px; height: 36px; border-radius: 2px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .15); }
+.spec-a { font-family: var(--a-font); font-weight: 800; font-size: 30px; line-height: 1; }
+.spec-a span { font-variation-settings: "wdth" 60; }
+.spec-b { font-family: var(--b-sign); font-size: 28px; line-height: 1; }
+.spec-c { font-family: var(--c-font); font-weight: 900; font-size: 34px; line-height: 1; text-transform: uppercase; letter-spacing: .02em; }
+.cons { color: var(--muted); border-left: 3px solid var(--line); padding-left: 12px; }
+
+.phones { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; }
+figure { margin: 0; display: grid; gap: 10px; justify-items: center; }
+figcaption { font: 13px/1.3 var(--mono); color: var(--muted); }
+
+/* Telefono */
+.phone { position: relative; width: 300px; max-width: 100%; height: 610px; border-radius: 38px; border: 8px solid var(--bezel); overflow: hidden; display: flex; flex-direction: column; isolation: isolate; }
+.status { display: flex; align-items: center; gap: 5px; padding: 16px 12px 6px; flex: none; }
+.chip { height: 28px; min-width: 30px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; gap: 2px; font-size: 11px; font-weight: 600; border-radius: 2px; }
+.code { margin-left: auto; font-size: 13px; letter-spacing: .12em; }
+.track { display: flex; gap: 10px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; padding: 34px 66px 16px; scrollbar-width: none; flex: none; touch-action: pan-x; }
+.track::-webkit-scrollbar { display: none; }
+.card { flex: none; width: 168px; scroll-snap-align: center; background: none; border: 0; padding: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent; }
+.card:focus-visible { outline-offset: 6px; }
+.lift { display: block; position: relative; transform: translateY(var(--dy, 0px)) rotate(var(--rot, 0deg)); transition: transform 260ms var(--ease), opacity 260ms; }
+.card[aria-pressed="true"] .lift { transform: translateY(calc(var(--dy, 0px) - 26px)) rotate(0deg); }
+.card.played .lift { transform: translateY(-150px) scale(.9) rotate(-3deg); opacity: 0; transition: transform 380ms var(--ease), opacity 260ms 100ms; }
+.face { position: relative; display: block; min-height: 214px; overflow: hidden; }
+.thumb { margin-top: auto; padding: 10px 16px 20px; display: grid; gap: 10px; flex: none; position: relative; }
+.hint { text-align: center; min-height: 1.3em; }
+.play, .next { height: 52px; width: 100%; border: 0; border-radius: 2px; cursor: pointer; }
+.play:disabled { cursor: default; }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 86px; z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 8px 8px 14px; border-radius: 2px; }
+.undo { min-height: 44px; padding: 0 12px; border: 0; border-radius: 2px; cursor: pointer; font: inherit; }
+.bk { position: relative; margin: 8px 18px 0; flex: none; }
+.slot { white-space: normal; }
+.slot .w { display: inline-block; }
+.count { text-align: center; padding-top: 14px; flex: none; }
+.stack { position: relative; flex: 1; min-height: 120px; }
+.back { position: absolute; left: 50%; top: 22px; width: 132px; height: 176px; margin-left: -66px; transform: translate(calc(var(--k) * 4px), calc(var(--k) * -4px)) rotate(calc(var(--k) * 2deg - 4deg)); transition: transform 380ms var(--ease), opacity 260ms; }
+.back.fly { transform: translate(0, -260px) rotate(-10deg); opacity: 0; }
+.vrow { display: flex; justify-content: center; }
+.voice { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; background: none; border: 0; cursor: pointer; font: inherit; color: inherit; border-radius: 2px; }
+
+/* ---------- A. Ciclostile ---------- */
+.a.phone { background: var(--a-paper); color: var(--a-ink); font-family: var(--a-font); }
+.a.phone::after { content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: .32; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .08 0 0 0 0 .08 0 0 0 0 .08 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.a .chip { font-family: var(--a-mono); }
+.a .chip.done { background: var(--a-ink); color: var(--a-card); }
+.a .chip.wait { box-shadow: inset 0 0 0 1.5px var(--a-ink); background: repeating-linear-gradient(-45deg, rgb(22 22 22 / .22) 0 1.5px, transparent 1.5px 5px); }
+.a .chip.me { background: var(--a-fluo); color: var(--a-ink); }
+.a .chip.judge { box-shadow: inset 0 0 0 1.5px var(--a-ink); }
+.a .code { font-family: var(--a-mono); }
+.a .bk::before { content: ""; position: absolute; inset: 0; background: var(--a-fluo); border-radius: 8px; transform: translate(5px, 5px) rotate(.6deg); }
+.a .bk-face { position: relative; background: var(--a-ink); color: var(--a-card); border-radius: 8px; padding: 16px 16px 12px; font-weight: 800; font-size: 20px; line-height: 1.14; font-variation-settings: "wdth" 84; transform: rotate(-1deg); }
+.a .blank { display: inline-block; width: 3.2em; height: .2em; background: var(--a-fluo); vertical-align: .05em; }
+.a .meta { display: flex; justify-content: space-between; margin-top: 12px; font: 11px/1 var(--a-mono); letter-spacing: .06em; color: #B9B9B4; }
+.a .slot { background: linear-gradient(var(--a-fluo), var(--a-fluo)) no-repeat 0 0 / 100% 100%; color: var(--a-ink); padding: 0 .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.a .slot.in { animation: a-snap 520ms cubic-bezier(.3, 1.6, .5, 1) both; }
+@keyframes a-snap { from { background-position: 7px 5px; } to { background-position: 0 0; } }
+.a .shadow { position: absolute; inset: 0; border-radius: 8px; transform: translate(6px, 8px); background-image: radial-gradient(var(--a-ink) 1.1px, transparent 1.5px); background-size: 4px 4px; opacity: .5; }
+.a .face { background: var(--a-card); border-radius: 8px; padding: 14px 14px 12px; font-weight: 700; font-size: 18px; line-height: 1.16; font-variation-settings: "wdth" 80; }
+.a .face::before { content: ""; position: absolute; inset: 0; background: var(--a-fluo); opacity: 0; transform: translate(var(--mx, 8px), var(--my, 6px)); }
+.a .card[aria-pressed="true"] .face::before { opacity: 1; animation: a-reg 460ms cubic-bezier(.3, 1.7, .5, 1) both; }
+@keyframes a-reg { from { transform: translate(var(--mx, 8px), var(--my, 6px)); } to { transform: translate(0, 0); } }
+.a .t { position: relative; display: block; }
+.a .foot { position: absolute; left: 14px; right: 14px; bottom: 12px; display: flex; align-items: center; gap: 8px; font: 10px/1 var(--a-mono); color: var(--a-ink2); letter-spacing: .04em; }
+.a .tag { width: 22px; height: 7px; background: var(--a-fluo); transform: translate(var(--mx, 3px), calc(var(--my, 2px) * -1)); }
+.a .card[aria-pressed="true"] .tag { background: var(--a-ink); transform: none; }
+.a .card[aria-pressed="true"] .foot { color: var(--a-ink); }
+.a .hint { font-weight: 600; font-size: 15px; font-variation-settings: "wdth" 90; }
+.a .play, .a .next { background: var(--a-ink); color: var(--a-card); font: 800 20px/1 var(--a-font); font-variation-settings: "wdth" 110; letter-spacing: .01em; }
+.a .play:disabled { background: repeating-linear-gradient(-45deg, rgb(22 22 22 / .55) 0 2px, transparent 2px 7px); color: var(--a-ink); box-shadow: inset 0 0 0 2px var(--a-ink); }
+.a .play:disabled span { background: var(--a-paper); padding: 3px 10px; }
+.a .toast { background: var(--a-ink); color: var(--a-card); font: 600 15px/1.2 var(--a-font); }
+.a .undo { background: var(--a-fluo); color: var(--a-ink); font-weight: 800; }
+.a .left { font-family: var(--a-mono); }
+.a .count { font: 12px/1 var(--a-mono); letter-spacing: .06em; }
+.a .back { border-radius: 8px; background: var(--a-fluo); overflow: hidden; display: grid; place-items: center; }
+.a .back::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--a-ink) 1px, transparent 1.4px); background-size: 5px 5px; opacity: .35; }
+.a .back span { position: relative; font-weight: 900; font-size: 26px; font-variation-settings: "wdth" 55; transform: rotate(-90deg); letter-spacing: .02em; }
+.a .voice { font-weight: 600; font-size: 15px; }
+.a .voice[aria-pressed="true"] { background: var(--a-fluo); }
+
+/* ---------- B. Bar Sport ---------- */
+.b.phone { background-color: var(--b-table); color: var(--b-ink); font-family: var(--b-mono);
+  background-image: radial-gradient(rgb(255 255 255 / .35) .8px, transparent 1.3px), radial-gradient(rgb(20 60 50 / .18) .8px, transparent 1.3px);
+  background-size: 7px 7px, 11px 11px; background-position: 0 0, 3px 5px; }
+.b .status { margin: 14px 10px 0; padding: 6px 8px; background: var(--b-paper); gap: 4px; }
+.b .chip { font-family: var(--b-mono); box-shadow: inset 0 0 0 1px var(--b-ink); }
+.b .chip.done::after { content: "X"; font-family: var(--b-sign); color: var(--b-red); margin-left: 3px; font-size: 13px; }
+.b .chip.me { background: var(--b-ink); color: var(--b-paper); }
+.b .chip.judge { color: var(--b-red); box-shadow: inset 0 0 0 2px var(--b-red); }
+.b .code { font-family: var(--b-sign); font-size: 13px; letter-spacing: .06em; }
+.b .bk { margin-top: 12px; }
+.b .bk-face { background: var(--b-ink); color: var(--b-paper); border-radius: 3px; padding: 18px 16px 12px; font: 19px/1.22 var(--b-sign); box-shadow: inset 0 0 0 4px var(--b-ink), inset 0 0 0 6px var(--b-paper); }
+.b .blank { display: inline-block; width: 3.2em; border-bottom: 3px dotted var(--b-paper); }
+.b .meta { display: flex; justify-content: space-between; margin-top: 12px; font: 600 11px/1 var(--b-mono); letter-spacing: .08em; color: #CFCDC5; }
+.b .slot { color: var(--b-paper); }
+.b .slot, .b .slot .w { text-decoration: underline 3px var(--b-red); text-underline-offset: 4px; }
+.b .slot.in .w { animation: b-type 1ms both; animation-delay: calc(var(--i) * 110ms); }
+@keyframes b-type { from { opacity: 0; } to { opacity: 1; } }
+.b .lift { filter: drop-shadow(0 3px 0 rgb(34 34 32 / .22)); }
+.b .face { background: var(--b-paper); padding: 20px 12px 18px; font: 500 14px/1.38 var(--b-mono); min-height: 206px;
+  --z: 10px;
+  -webkit-mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--z) 51% repeat-x, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--z) 51% repeat-x;
+  mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--z) 51% repeat-x, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--z) 51% repeat-x; }
+.b .rh, .b .rf { display: block; font-size: 10px; letter-spacing: .08em; text-align: center; color: #55554F; }
+.b .rh { border-bottom: 1px dashed #8A8A84; padding-bottom: 6px; margin-bottom: 10px; }
+.b .rf { position: absolute; left: 12px; right: 12px; bottom: 16px; border-top: 1px dashed #8A8A84; padding-top: 6px; }
+.b .stamp { position: absolute; right: 10px; top: 46%; border: 3px solid var(--b-red); color: var(--b-red); font: 17px/1 var(--b-sign); padding: 4px 8px 3px; letter-spacing: .06em; opacity: 0; transform: rotate(-14deg) scale(1.8); }
+.b .card[aria-pressed="true"] .stamp { animation: b-stamp 360ms cubic-bezier(.2, .9, .3, 1) both; }
+@keyframes b-stamp { 0% { opacity: 0; transform: rotate(-14deg) scale(1.8); } 60% { opacity: 1; transform: rotate(-14deg) scale(.94); } 75% { transform: rotate(-12deg) scale(1.02); } 100% { opacity: 1; transform: rotate(-14deg) scale(1); } }
+.b .hint { font-size: 13px; font-weight: 600; background: var(--b-paper); padding: 6px 8px; }
+.b .play, .b .next { background: var(--b-red); color: var(--b-paper); font: 21px/1 var(--b-sign); letter-spacing: .03em; }
+.b .play:disabled { background: transparent; color: var(--b-ink); box-shadow: inset 0 0 0 2px var(--b-ink); }
+.b .toast { background: var(--b-paper); color: var(--b-ink); font: 600 13px/1.2 var(--b-mono); box-shadow: 0 3px 0 rgb(34 34 32 / .25); }
+.b .undo { background: var(--b-ink); color: var(--b-paper); font-family: var(--b-sign); }
+.b .count { font: 600 12px/1 var(--b-mono); }
+.b .count span { background: var(--b-paper); padding: 5px 8px; }
+.b .back { background: var(--b-paper); display: grid; place-items: center; text-align: center; font: 600 11px/1.5 var(--b-mono); color: #8A8A84; letter-spacing: .1em; filter: drop-shadow(0 3px 0 rgb(34 34 32 / .2)); }
+.b .voice { font-weight: 600; font-size: 13px; background: var(--b-paper); }
+.b .voice[aria-pressed="true"] { background: var(--b-ink); color: var(--b-paper); }
+
+/* ---------- C. Tabellone ---------- */
+.c.phone { background: var(--c-board); color: var(--c-plate); font-family: var(--c-font); }
+.c .chip { font-family: var(--c-mono); font-size: 10px; background: var(--c-flap); color: var(--c-dim); }
+.c .chip.done { color: var(--c-plate); }
+.c .chip.done::after { content: ""; width: 6px; height: 6px; background: var(--c-yellow); margin-left: 4px; }
+.c .chip.me { background: var(--c-plate); color: var(--c-board); }
+.c .chip.judge { background: var(--c-yellow); color: var(--c-board); }
+.c .code { font-family: var(--c-mono); color: var(--c-yellow); font-size: 12px; }
+.c .bk-face { background: var(--c-flap); border-radius: 4px; padding: 10px 12px 10px; font-weight: 800; font-size: 22px; line-height: 30px; text-transform: uppercase; letter-spacing: .02em;
+  background-image: linear-gradient(to bottom, transparent 14px, rgb(0 0 0 / .85) 14px 16px, transparent 16px); background-size: 100% 30px; background-position: 0 10px; }
+.c .blank { display: inline-block; width: 3em; height: 24px; vertical-align: -5px; background: var(--c-yellow); }
+.c .meta { display: flex; justify-content: space-between; margin-top: 8px; font: 10px/1 var(--c-mono); letter-spacing: .08em; color: var(--c-dim); text-transform: uppercase; }
+.c .slot { color: var(--c-yellow); }
+.c .slot .w { perspective: 200px; }
+.c .slot.in .w { animation: c-flap 300ms steps(4, end) both; animation-delay: calc(var(--i) * 80ms); transform-origin: 50% 55%; }
+@keyframes c-flap { 0% { transform: rotateX(90deg); opacity: .2; } 100% { transform: rotateX(0); opacity: 1; } }
+.c .face { background: var(--c-plate); color: var(--c-board); border-radius: 10px; padding: 18px 16px 14px; font-weight: 800; font-size: 22px; line-height: 1.04;
+  box-shadow: inset 0 0 0 4px var(--c-plate), inset 0 0 0 6px var(--c-board);
+  background-image: radial-gradient(circle at 12px 12px, #9B9A95 2.5px, transparent 3px), radial-gradient(circle at calc(100% - 12px) 12px, #9B9A95 2.5px, transparent 3px), radial-gradient(circle at 12px calc(100% - 12px), #9B9A95 2.5px, transparent 3px), radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), #9B9A95 2.5px, transparent 3px); }
+.c .face::before { content: ""; position: absolute; left: 6px; right: 6px; top: 6px; height: 0; background: var(--c-yellow); transition: height 200ms steps(3, end); }
+.c .card[aria-pressed="true"] .face::before { height: 12px; }
+.c .t { position: relative; display: block; padding-top: 6px; }
+.c .plate-no { position: absolute; left: 16px; bottom: 14px; font: 600 10px/1 var(--c-mono); letter-spacing: .08em; color: #6B6A66; }
+.c .hint { font: 600 12px/1.3 var(--c-mono); color: var(--c-plate); text-transform: uppercase; letter-spacing: .04em; }
+.c .play, .c .next { background: var(--c-yellow); color: var(--c-board); font-weight: 900; font-size: 24px; letter-spacing: .08em; text-transform: uppercase; font-family: var(--c-font); }
+.c .play:disabled { background: transparent; color: var(--c-dim); box-shadow: inset 0 0 0 2px #4A4A47; }
+.c .toast { background: var(--c-plate); color: var(--c-board); font: 600 12px/1.2 var(--c-mono); text-transform: uppercase; }
+.c .undo { background: var(--c-board); color: var(--c-yellow); font-family: var(--c-mono); text-transform: uppercase; font-size: 12px; }
+.c .count { font: 600 11px/1 var(--c-mono); color: var(--c-dim); text-transform: uppercase; letter-spacing: .08em; }
+.c .back { background: #2A2A29; border-radius: 10px; box-shadow: inset 0 0 0 4px #2A2A29, inset 0 0 0 6px #4A4A47; display: grid; place-items: center; }
+.c .back span { color: var(--c-yellow); font-weight: 900; font-size: 44px; }
+.c .voice { font: 600 12px/1 var(--c-mono); text-transform: uppercase; color: var(--c-plate); }
+.c .voice[aria-pressed="true"] { background: var(--c-plate); color: var(--c-board); }
+
+/* Chiusura */
+.bet { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; padding-block: 40px; border-top: 1.5px solid var(--line); }
+@media (max-width: 820px) { .bet { grid-template-columns: minmax(0, 1fr); } }
+.bet h2 { font-size: 30px; line-height: 1.1; margin-bottom: 12px; }
+.bet ol, .bet ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+.states { display: grid; gap: 10px; margin-top: 16px; }
+.state { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; align-items: center; }
+.state i { height: 34px; border-radius: 2px; display: grid; place-items: center; font: normal 700 14px/1 var(--a-font); font-variation-settings: "wdth" 90; }
+.s1 { background: #FF3EA5; color: #161616; }
+.s2 { background: #161616; color: #F6F6F3; box-shadow: inset 0 0 0 1.5px var(--line); }
+.s3 { background: #DEDEDA repeating-linear-gradient(-45deg, rgb(22 22 22 / .5) 0 2px, transparent 2px 7px); color: #161616; box-shadow: inset 0 0 0 2px #161616; }
+.s3 b { background: #DEDEDA; padding: 2px 6px; }
+.note { color: var(--muted); font-size: 14px; margin-top: 24px; max-width: 70ch; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lift, .back, .c .face::before { transition: opacity 120ms linear; }
+  .card[aria-pressed="true"] .lift { transform: none; }
+  .card.played .lift, .back.fly { transform: none; }
+  .a .card[aria-pressed="true"] .face::before { animation: none; transform: none; }
+  .a .slot.in, .b .slot.in .w, .c .slot.in .w, .b .card[aria-pressed="true"] .stamp { animation: none; }
+  .b .card[aria-pressed="true"] .stamp { opacity: 1; transform: rotate(-14deg); }
+  .a .tag { transform: none; }
+}
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <h1>Tappabuchi, tre direzioni</h1>
+    <p>Stesse due schermate, stesso contenuto, tre linguaggi. Tocca una carta per sceglierla, poi premi Gioca o trascinala in su. Nella rivelazione, tocca il pulsante per svelare la risposta successiva; l'altoparlante attiva la lettura ad alta voce.</p>
+    <nav class="jump" aria-label="Direzioni">
+      <a href="#ciclostile">A. Ciclostile</a>
+      <a href="#barsport">B. Bar Sport</a>
+      <a href="#tabellone">C. Tabellone</a>
+      <a href="#scommessa">La scommessa</a>
+    </nav>
+  </header>
+
+  <!-- ===================== A ===================== -->
+  <section class="dir" id="ciclostile" aria-labelledby="ha">
+    <div class="sheet">
+      <h2 id="ha">A. Ciclostile <span class="pick">consigliata</span></h2>
+      <p class="lead">Stampa Risograph e fanzine punk. Due inchiostri su carta grigia; ogni carta è un foglio stampato, con il rosa un po' fuori registro.</p>
+      <dl>
+        <dt>Riferimenti</dt><dd>Fanzine punk anni '80, stampe Risograph a due colori, Bruno Munari, manifesti serigrafati.</dd>
+        <dt>Palette</dt><dd><div class="swatches">
+          <span class="sw"><i style="background:#DEDEDA"></i>#DEDEDA</span>
+          <span class="sw"><i style="background:#F6F6F3"></i>#F6F6F3</span>
+          <span class="sw"><i style="background:#161616"></i>#161616</span>
+          <span class="sw"><i style="background:#FF3EA5"></i>#FF3EA5</span>
+        </div></dd>
+        <dt>Tipografia</dt><dd><div class="spec-a">Tappabuchi <span>Tappabuchi</span></div>Anybody, larghezza variabile: le frasi lunghe si stringono invece di andare a capo all'infinito. Fragment Mono per codici e punteggi.</dd>
+        <dt>Movimento</dt><dd>Lo strato rosa scatta a registro quando scegli una carta o quando arriva una risposta. Ombre a retino, molle pesanti.</dd>
+      </dl>
+      <p class="cons">Rischio: il rosa su carta non regge il testo (2,4:1). Regola fissa: il rosa fa solo campiture, il testo sopra è sempre nero.</p>
+    </div>
+    <div class="phones">
+      <figure>
+        <div class="phone a" data-hand>
+          <div class="status" role="list" aria-label="Giocatori">
+            <span class="chip done" role="listitem"><span class="sr">Giulia, ha giocato: </span>GI</span>
+            <span class="chip done" role="listitem"><span class="sr">Marco, ha giocato: </span>MA</span>
+            <span class="chip wait" role="listitem"><span class="sr">Luca, deve giocare: </span>LU</span>
+            <span class="chip me" role="listitem"><span class="sr">Tu, devi giocare: </span>TU</span>
+            <span class="chip judge" role="listitem"><span class="ms" aria-hidden="true">gavel</span><span class="sr">Sara, giudice: </span>SA</span>
+            <span class="code" aria-label="Codice stanza BRMT">BRMT</span>
+          </div>
+          <div class="bk"><div class="bk-face">Il mio terapeuta dice che il problema non sono io, ma <span class="blank" aria-label="spazio"></span>.<div class="meta"><span>PESCA 1</span><span>TAPPABUCHI</span></div></div></div>
+          <div class="track" role="listbox" aria-label="La tua mano">
+            <button class="card" role="option" aria-pressed="false" style="--mx:7px;--my:5px"><span class="lift"><span class="shadow"></span><span class="face"><span class="t">il gruppo WhatsApp del condominio</span><span class="foot"><span class="tag"></span>tappabuchi</span></span></span></button>
+            <button class="card" role="option" aria-pressed="false" style="--mx:-5px;--my:7px"><span class="lift"><span class="shadow"></span><span class="face"><span class="t">mia zia che commenta tutto su Facebook</span><span class="foot"><span class="tag"></span>tappabuchi</span></span></span></button>
+            <button class="card" role="option" aria-pressed="false" style="--mx:9px;--my:-4px"><span class="lift"><span class="shadow"></span><span class="face"><span class="t">la riunione che poteva essere una mail</span><span class="foot"><span class="tag"></span>tappabuchi</span></span></span></button>
+            <button class="card" role="option" aria-pressed="false" style="--mx:-7px;--my:-6px"><span class="lift"><span class="shadow"></span><span class="face"><span class="t">un risotto scotto servito con orgoglio</span><span class="foot"><span class="tag"></span>tappabuchi</span></span></span></button>
+            <button class="card" role="option" aria-pressed="false" style="--mx:6px;--my:8px"><span class="lift"><span class="shadow"></span><span class="face"><span class="t">il mio ex in pigiama al supermercato</span><span class="foot"><span class="tag"></span>tappabuchi</span></span></span></button>
+          </div>
+          <div class="thumb">
+            <p class="hint" aria-live="polite">Tocca una carta per sceglierla</p>
+            <button class="play" disabled><span>Gioca</span></button>
+          </div>
+          <div class="toast" hidden><span>Giocata. Annulli entro <span class="left">3</span> s</span><button class="undo">Annulla</button></div>
+        </div>
+        <figcaption>Mano: scegli e gioca</figcaption>
+      </figure>
+      <figure>
+        <div class="phone a" data-reveal>
+          <div class="status" role="list" aria-label="Giocatori">
+            <span class="chip done" role="listitem">GI</span><span class="chip done" role="listitem">MA</span><span class="chip done" role="listitem">LU</span><span class="chip done" role="listitem">IN</span>
+            <span class="chip me" role="listitem"><span class="ms" aria-hidden="true">gavel</span><span class="sr">Tu, giudice: </span>TU</span>
+            <span class="code">BRMT</span>
+          </div>
+          <div class="bk"><div class="bk-face">Il mio terapeuta dice che il problema non sono io, ma <span class="slot" aria-live="polite"></span>.<div class="meta"><span>PESCA 1</span><span>TAPPABUCHI</span></div></div></div>
+          <p class="count" aria-live="polite"></p>
+          <div class="stack" aria-hidden="true">
+            <span class="back" style="--k:0"><span>tappabuchi</span></span><span class="back" style="--k:1"><span>tappabuchi</span></span><span class="back" style="--k:2"><span>tappabuchi</span></span><span class="back" style="--k:3"><span>tappabuchi</span></span>
+          </div>
+          <div class="thumb">
+            <div class="vrow"><button class="voice" aria-pressed="false"><span class="ms" aria-hidden="true">volume_up</span>Leggi ad alta voce</button></div>
+            <button class="next">Svela la prossima</button>
+          </div>
+        </div>
+        <figcaption>Rivelazione: il giudice svela</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== B ===================== -->
+  <section class="dir" id="barsport" aria-labelledby="hb">
+    <div class="sheet">
+      <h2 id="hb">B. Bar Sport</h2>
+      <p class="lead">L'effimera del bar italiano. Le risposte sono scontrini, la carta nera è un'insegna, la scelta si timbra.</p>
+      <dl>
+        <dt>Riferimenti</dt><dd>Schedina Totocalcio, scontrini fiscali, timbri postali, manifesti Olivetti di Pintori, tavolini in formica anni '70.</dd>
+        <dt>Palette</dt><dd><div class="swatches">
+          <span class="sw"><i style="background:#9CC7BA"></i>#9CC7BA</span>
+          <span class="sw"><i style="background:#F7F6F1"></i>#F7F6F1</span>
+          <span class="sw"><i style="background:#222220"></i>#222220</span>
+          <span class="sw"><i style="background:#C8102E"></i>#C8102E</span>
+        </div></dd>
+        <dt>Tipografia</dt><dd><div class="spec-b">Tappabuchi</div>Alfa Slab One come un'insegna, IBM Plex Mono come uno scontrino.</dd>
+        <dt>Movimento</dt><dd>Il timbro cade sulla carta scelta con un piccolo rimbalzo; la risposta si stampa parola per parola.</dd>
+      </dl>
+      <p class="cons">Rischio: la metafora scontrino e schedina si affolla presto su uno schermo piccolo, e lega poco con l'idea di carte nere e bianche.</p>
+    </div>
+    <div class="phones">
+      <figure>
+        <div class="phone b" data-hand>
+          <div class="status" role="list" aria-label="Giocatori">
+            <span class="chip done" role="listitem">GI</span><span class="chip done" role="listitem">MA</span><span class="chip" role="listitem">LU</span><span class="chip me" role="listitem">TU</span>
+            <span class="chip judge" role="listitem"><span class="ms" aria-hidden="true">gavel</span>SA</span>
+            <span class="code">BRMT</span>
+          </div>
+          <div class="bk"><div class="bk-face">Il mio terapeuta dice che il problema non sono io, ma <span class="blank" aria-label="spazio"></span>.<div class="meta"><span>PESCA 1</span><span>TAPPABUCHI</span></div></div></div>
+          <div class="track" role="listbox" aria-label="La tua mano">
+            <button class="card" role="option" aria-pressed="false"><span class="lift"><span class="face"><span class="rh">SCONTRINO N. 0041</span>il gruppo WhatsApp del condominio<span class="rf">GRAZIE E ARRIVEDERCI</span></span><span class="stamp">GIOCO</span></span></button>
+            <button class="card" role="option" aria-pressed="false"><span class="lift"><span class="face"><span class="rh">SCONTRINO N. 0042</span>mia zia che commenta tutto su Facebook<span class="rf">GRAZIE E ARRIVEDERCI</span></span><span class="stamp">GIOCO</span></span></button>
+            <button class="card" role="option" aria-pressed="false"><span class="lift"><span class="face"><span class="rh">SCONTRINO N. 0043</span>la riunione che poteva essere una mail<span class="rf">GRAZIE E ARRIVEDERCI</span></span><span class="stamp">GIOCO</span></span></button>
+            <button class="card" role="option" aria-pressed="false"><span class="lift"><span class="face"><span class="rh">SCONTRINO N. 0044</span>un risotto scotto servito con orgoglio<span class="rf">GRAZIE E ARRIVEDERCI</span></span><span class="stamp">GIOCO</span></span></button>
+            <button class="card" role="option" aria-pressed="false"><span class="lift"><span class="face"><span class="rh">SCONTRINO N. 0045</span>il mio ex in pigiama al supermercato<span class="rf">GRAZIE E ARRIVEDERCI</span></span><span class="stamp">GIOCO</span></span></button>
+          </div>
+          <div class="thumb">
+            <p class="hint" aria-live="polite">Tocca una carta per sceglierla</p>
+            <button class="play" disabled><span>Gioca</span></button>
+          </div>
+          <div class="toast" hidden><span>Giocata. Annulli entro <span class="left">3</span> s</span><button class="undo">Annulla</button></div>
+        </div>
+        <figcaption>Mano: scegli e gioca</figcaption>
+      </figure>
+      <figure>
+        <div class="phone b" data-reveal>
+          <div class="status" role="list" aria-label="Giocatori">
+            <span class="chip done" role="listitem">GI</span><span class="chip done" role="listitem">MA</span><span class="chip done" role="listitem">LU</span><span class="chip done" role="listitem">IN</span>
+            <span class="chip me judge" role="listitem"><span class="ms" aria-hidden="true">gavel</span>TU</span>
+            <span class="code">BRMT</span>
+          </div>
+          <div class="bk"><div class="bk-face">Il mio terapeuta dice che il problema non sono io, ma <span class="slot" aria-live="polite"></span>.<div class="meta"><span>PESCA 1</span><span>TAPPABUCHI</span></div></div></div>
+          <p class="count" aria-live="polite"></p>
+          <div class="stack" aria-hidden="true">
+            <span class="back" style="--k:0">VALE<br>UNA<br>RISATA</span><span class="back" style="--k:1">VALE<br>UNA<br>RISATA</span><span class="back" style="--k:2">VALE<br>UNA<br>RISATA</span><span class="back" style="--k:3">VALE<br>UNA<br>RISATA</span>
+          </div>
+          <div class="thumb">
+            <div class="vrow"><button class="voice" aria-pressed="false"><span class="ms" aria-hidden="true">volume_up</span>Leggi ad alta voce</button></div>
+            <button class="next">Svela la prossima</button>
+          </div>
+        </div>
+        <figcaption>Rivelazione: il giudice svela</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== C ===================== -->
+  <section class="dir" id="tabellone" aria-labelledby="hc">
+    <div class="sheet">
+      <h2 id="hc">C. Tabellone</h2>
+      <p class="lead">Il tabellone delle partenze. La carta nera è un pannello a palette, le risposte sono targhe smaltate, ogni rivelazione sfoglia le lettere.</p>
+      <dl>
+        <dt>Riferimenti</dt><dd>Tabelloni split-flap delle stazioni italiane, il manuale di Vignelli per la metro di New York, l'orologio delle ferrovie svizzere.</dd>
+        <dt>Palette</dt><dd><div class="swatches">
+          <span class="sw"><i style="background:#121212"></i>#121212</span>
+          <span class="sw"><i style="background:#1D1D1D"></i>#1D1D1D</span>
+          <span class="sw"><i style="background:#F0EFEA"></i>#F0EFEA</span>
+          <span class="sw"><i style="background:#FFC20E"></i>#FFC20E</span>
+        </div></dd>
+        <dt>Tipografia</dt><dd><div class="spec-c">Tappabuchi</div>Big Shoulders Display condensato, Martian Mono per gli stati.</dd>
+        <dt>Movimento</dt><dd>Le parole della risposta arrivano sfogliando le palette, con scatti meccanici invece di molle.</dd>
+      </dl>
+      <p class="cons">Rischio: le carte smettono di sembrare carta; le frasi lunghe in maiuscolo condensato al 200% diventano faticose, e senza movimento resta un tabellone fermo.</p>
+    </div>
+    <div class="phones">
+      <figure>
+        <div class="phone c" data-hand>
+          <div class="status" role="list" aria-label="Giocatori">
+            <span class="chip done" role="listitem">GI</span><span class="chip done" role="listitem">MA</span><span class="chip" role="listitem">LU</span><span class="chip me" role="listitem">TU</span>
+            <span class="chip judge" role="listitem"><span class="ms" aria-hidden="true">gavel</span>SA</span>
+            <span class="code">BRMT</span>
+          </div>
+          <div class="bk"><div class="bk-face">Il mio terapeuta dice che il problema non sono io, ma <span class="blank" aria-label="spazio"></span>.<div class="meta"><span>Pesca 1</span><span>Tappabuchi</span></div></div></div>
+          <div class="track" role="listbox" aria-label="La tua mano">
+            <button class="card" role="option" aria-pressed="false"><span class="lift"><span class="face"><span class="t">il gruppo WhatsApp del condominio</span><span class="plate-no">N. 041</span></span></span></button>
+            <button class="card" role="option" aria-pressed="false"><span class="lift"><span class="face"><span class="t">mia zia che commenta tutto su Facebook</span><span class="plate-no">N. 042</span></span></span></button>
+            <button class="card" role="option" aria-pressed="false"><span class="lift"><span class="face"><span class="t">la riunione che poteva essere una mail</span><span class="plate-no">N. 043</span></span></span></button>
+            <button class="card" role="option" aria-pressed="false"><span class="lift"><span class="face"><span class="t">un risotto scotto servito con orgoglio</span><span class="plate-no">N. 044</span></span></span></button>
+            <button class="card" role="option" aria-pressed="false"><span class="lift"><span class="face"><span class="t">il mio ex in pigiama al supermercato</span><span class="plate-no">N. 045</span></span></span></button>
+          </div>
+          <div class="thumb">
+            <p class="hint" aria-live="polite">Tocca una carta per sceglierla</p>
+            <button class="play" disabled><span>Gioca</span></button>
+          </div>
+          <div class="toast" hidden><span>Giocata. Annulli entro <span class="left">3</span> s</span><button class="undo">Annulla</button></div>
+        </div>
+        <figcaption>Mano: scegli e gioca</figcaption>
+      </figure>
+      <figure>
+        <div class="phone c" data-reveal>
+          <div class="status" role="list" aria-label="Giocatori">
+            <span class="chip done" role="listitem">GI</span><span class="chip done" role="listitem">MA</span><span class="chip done" role="listitem">LU</span><span class="chip done" role="listitem">IN</span>
+            <span class="chip judge" role="listitem"><span class="ms" aria-hidden="true">gavel</span>TU</span>
+            <span class="code">BRMT</span>
+          </div>
+          <div class="bk"><div class="bk-face">Il mio terapeuta dice che il problema non sono io, ma <span class="slot" aria-live="polite"></span>.<div class="meta"><span>Pesca 1</span><span>Tappabuchi</span></div></div></div>
+          <p class="count" aria-live="polite"></p>
+          <div class="stack" aria-hidden="true">
+            <span class="back" style="--k:0"><span>?</span></span><span class="back" style="--k:1"><span>?</span></span><span class="back" style="--k:2"><span>?</span></span><span class="back" style="--k:3"><span>?</span></span>
+          </div>
+          <div class="thumb">
+            <div class="vrow"><button class="voice" aria-pressed="false"><span class="ms" aria-hidden="true">volume_up</span>Leggi ad alta voce</button></div>
+            <button class="next">Svela la prossima</button>
+          </div>
+        </div>
+        <figcaption>Rivelazione: il giudice svela</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="bet" id="scommessa" aria-labelledby="hs">
+    <div>
+      <h2 id="hs">La scommessa: due inchiostri, mai un terzo</h2>
+      <p>Se scegli A, il gioco resta stampato in nero e rosa fluo su carta, per sempre. Niente verde per il successo, niente rosso per gli errori, niente colore per giocatore. Gli stati si leggono da inchiostro, retino, tipografia e icone:</p>
+      <div class="states">
+        <div class="state"><i class="s1">Tocca a te</i><span>Campitura rosa, testo nero: selezionato, il tuo turno, la tua azione.</span></div>
+        <div class="state"><i class="s2">Fatto</i><span>Campitura nera, testo carta: giocato, confermato.</span></div>
+        <div class="state"><i class="s3"><b>Attesa</b></i><span>Tratteggio d'inchiostro più testo esplicito: disattivato, in attesa, errore.</span></div>
+      </div>
+    </div>
+    <div>
+      <h2>Perché consiglio A</h2>
+      <ol>
+        <li>La carta è davvero carta: peso, retino e pile vengono dal materiale.</li>
+        <li>Il tono fotocopiato e punk è quello del gioco.</li>
+        <li>Sfocato, si capisce ancora: il rosa è sempre la tua mossa.</li>
+        <li>Senza animazioni resta riconoscibile, perché l'identità è nella stampa.</li>
+        <li>Regge chiaro e scuro senza forzature.</li>
+      </ol>
+      <p class="note">Queste tavole usano Material Symbols per le due icone; nel gioco useremo Phosphor. Rispondi in chat con A, B o C, o con un incrocio motivato (per esempio "A, con il timbro di B per la vittoria").</p>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const sentence = 'Il mio terapeuta dice che il problema non sono io, ma ___.';
+  const answers = [
+    'il gruppo WhatsApp del condominio',
+    'mia zia che commenta tutto su Facebook',
+    'la riunione che poteva essere una mail',
+    'un risotto scotto servito con orgoglio',
+    'il mio ex in pigiama al supermercato'
+  ];
+  const hints = ['Tocca una carta per sceglierla', 'Trascinala in su o premi Gioca', 'Giocata. Gli altri stanno scegliendo'];
+
+  document.querySelectorAll('[data-hand]').forEach((phone) => {
+    const track = phone.querySelector('.track');
+    const cards = [...track.querySelectorAll('.card')];
+    const play = phone.querySelector('.play');
+    const hint = phone.querySelector('.hint');
+    const toast = phone.querySelector('.toast');
+    const undo = toast.querySelector('.undo');
+    const left = toast.querySelector('.left');
+    let sel = null, busy = false, tick = 0, raf = 0;
+
+    const fan = () => {
+      const r = track.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      for (const c of cards) {
+        const b = c.getBoundingClientRect();
+        const d = Math.max(-2, Math.min(2, (b.left + b.width / 2 - cx) / (b.width + 10)));
+        c.style.setProperty('--rot', (reduce.matches ? 0 : d * 6).toFixed(2) + 'deg');
+        c.style.setProperty('--dy', (reduce.matches ? 0 : Math.abs(d) * 16).toFixed(1) + 'px');
+      }
+    };
+    track.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fan); }, { passive: true });
+    addEventListener('resize', fan);
+    const first = cards[1];
+    track.scrollLeft = first.offsetLeft - (track.clientWidth - first.offsetWidth) / 2;
+    fan();
+
+    const select = (c) => {
+      sel = sel === c ? null : c;
+      cards.forEach((x) => x.setAttribute('aria-pressed', String(x === sel)));
+      play.disabled = !sel;
+      hint.textContent = hints[sel ? 1 : 0];
+      if (sel) track.scrollTo({ left: sel.offsetLeft - (track.clientWidth - sel.offsetWidth) / 2, behavior: reduce.matches ? 'auto' : 'smooth' });
+    };
+    const finish = (card) => {
+      toast.hidden = true;
+      setTimeout(() => { card.classList.remove('played'); busy = false; select(card); }, 900);
+    };
+    const doPlay = () => {
+      if (!sel || busy) return;
+      busy = true;
+      const card = sel;
+      card.classList.add('played');
+      play.disabled = true;
+      hint.textContent = hints[2];
+      let n = 3;
+      left.textContent = n;
+      toast.hidden = false;
+      clearInterval(tick);
+      tick = setInterval(() => { n -= 1; left.textContent = n; if (n <= 0) { clearInterval(tick); finish(card); } }, 1000);
+      undo.onclick = () => { clearInterval(tick); toast.hidden = true; card.classList.remove('played'); busy = false; play.disabled = false; hint.textContent = hints[1]; };
+    };
+    cards.forEach((c) => {
+      let y0 = null;
+      c.addEventListener('click', () => { if (!busy) select(c); });
+      c.addEventListener('pointerdown', (e) => { y0 = e.clientY; });
+      c.addEventListener('pointerup', (e) => { if (y0 !== null && sel === c && y0 - e.clientY > 50) doPlay(); y0 = null; });
+    });
+    play.addEventListener('click', doPlay);
+  });
+
+  document.querySelectorAll('[data-reveal]').forEach((phone) => {
+    const slot = phone.querySelector('.slot');
+    const count = phone.querySelector('.count');
+    const backs = [...phone.querySelectorAll('.back')];
+    const next = phone.querySelector('.next');
+    const voice = phone.querySelector('.voice');
+    const isB = phone.classList.contains('b');
+    let i = 0, busy = false;
+
+    const speak = () => {
+      try {
+        if (!('speechSynthesis' in window)) return;
+        const u = new SpeechSynthesisUtterance(sentence.replace('___', answers[i]));
+        u.lang = 'it-IT';
+        speechSynthesis.cancel();
+        speechSynthesis.speak(u);
+      } catch (e) { /* lettura non disponibile: si continua in silenzio */ }
+    };
+    const paint = (talk) => {
+      slot.textContent = '';
+      answers[i].split(' ').forEach((w, k) => {
+        if (k) slot.append(' ');
+        const s = document.createElement('span');
+        s.className = 'w';
+        s.style.setProperty('--i', k);
+        s.textContent = w;
+        slot.append(s);
+      });
+      slot.classList.remove('in');
+      void slot.offsetWidth;
+      slot.classList.add('in');
+      count.innerHTML = isB ? '<span>Risposta ' + (i + 1) + ' di ' + answers.length + '</span>' : 'Risposta ' + (i + 1) + ' di ' + answers.length;
+      const visible = answers.length - 1 - i;
+      backs.forEach((b, k) => { b.hidden = k >= visible; b.classList.remove('fly'); });
+      next.textContent = i < answers.length - 1 ? 'Svela la prossima' : 'Da capo';
+      if (talk && voice.getAttribute('aria-pressed') === 'true') speak();
+    };
+    next.addEventListener('click', () => {
+      if (busy) return;
+      if (i >= answers.length - 1) { i = 0; paint(true); return; }
+      const top = backs[answers.length - 2 - i];
+      busy = true;
+      top.classList.add('fly');
+      setTimeout(() => { i += 1; paint(true); busy = false; }, reduce.matches ? 0 : 300);
+    });
+    voice.addEventListener('click', () => {
+      const on = voice.getAttribute('aria-pressed') !== 'true';
+      voice.setAttribute('aria-pressed', String(on));
+      if (on) speak(); else { try { speechSynthesis.cancel(); } catch (e) {} }
+    });
+    paint(false);
+  });
+})();
+</script>
