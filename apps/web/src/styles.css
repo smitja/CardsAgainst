@@ -547,3 +547,28 @@ button:disabled {
     transform: none;
   }
 }
+
+/* Mazzi in lobby */
+.decks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.decks small {
+  display: block;
+  font-weight: 400;
+}
+.custom-deck {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.add-deck .row {
+  display: flex;
+  gap: 8px;
+}
+.add-deck .row input {
+  flex: 1;
+  min-width: 0;
+}

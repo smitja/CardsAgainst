@@ -8,7 +8,7 @@ Stato: Fase 3 (server delle stanze e client essenziale giocabile dall'inizio all
 
 ```
 packages/engine     macchina a stati pura del gioco, senza dipendenze
-packages/decks      schema dei mazzi, testo delle carte, combinazione dei mazzi
+packages/decks      schema dei mazzi, testo delle carte, mazzi inclusi (Cards Against Cirelli di default, Mazzo base)
 packages/protocol   messaggi client/server (zod) e codici stanza
 apps/server         Node: file statici, API, WebSocket, stanze, SQLite/Postgres
 apps/web            client Vite + React
@@ -26,6 +26,8 @@ pnpm build                                  # client in apps/web/dist, server in
 pnpm start                                  # gioco su http://localhost:3000
 pnpm e2e                                    # build + test Playwright
 ```
+
+Per importare nuove carte dai PDF stampabili: `python3 scripts/pdf-cards.py file1.pdf file2.pdf > carte.json` (serve `pdftotext`).
 
 Sviluppo: `pnpm --filter @cirelli/server dev` (porta 3000) e `pnpm --filter @cirelli/web dev` (Vite, con proxy verso il server).
 

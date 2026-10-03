@@ -296,13 +296,7 @@ function Lobby({ client, view, me, isHost, room, onInvite }: PhaseProps) {
       </ul>
 
       <h2>Mazzi</h2>
-      <ul className="list">
-        {room?.decks.map((d) => (
-          <li key={d.code}>
-            {d.name}: {d.black} nere, {d.white} bianche
-          </li>
-        ))}
-      </ul>
+      <Decks client={client} room={room} isHost={isHost} />
       {check.warnings.includes('NOT_ENOUGH_WHITE') && (
         <p className="warn">
           Per {players} giocatori servono almeno {check.needed} carte bianche.
@@ -394,6 +388,101 @@ function Lobby({ client, view, me, isHost, room, onInvite }: PhaseProps) {
         <p className="lead thumb">Aspettiamo che l’host inizi la partita.</p>
       )}
     </section>
+  );
+}
+
+function Decks({
+  client,
+  room,
+  isHost,
+}: {
+  client: RoomClient;
+  room: RoomSnapshot['room'];
+  isHost: boolean;
+}) {
+  const [code, setCode] = useState('');
+  if (!room) return null;
+  const active = room.decks.map((d) => d.code);
+  const builtin = new Set(room.available.map((d) => d.code));
+  const custom = room.decks.filter((d) => !builtin.has(d.code));
+  const setDecks = (decks: string[]) => client.send({ type: 'setDecks', decks });
+  const toggle = (id: string, on: boolean) =>
+    setDecks(on ? [...active, id] : active.filter((c) => c !== id));
+  const describe = (d: { black: number; white: number }) => `${d.black} nere, ${d.white} bianche`;
+
+  if (!isHost) {
+    return (
+      <ul className="list">
+        {room.decks.map((d) => (
+          <li key={d.code}>
+            {d.name}: {describe(d)}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  function add(e: FormEvent) {
+    e.preventDefault();
+    const c = code.trim().toUpperCase();
+    if (!/^[A-Z0-9]{6}$/.test(c) || active.includes(c)) return;
+    setDecks([...active, c]);
+    setCode('');
+  }
+
+  return (
+    <div className="decks">
+      {room.available.map((d) => {
+        const on = active.includes(d.code);
+        return (
+          <label key={d.code} className="toggle">
+            <input
+              type="checkbox"
+              role="switch"
+              checked={on}
+              // Almeno un mazzo resta sempre attivo.
+              disabled={on && active.length === 1}
+              onChange={(e) => toggle(d.code, e.target.checked)}
+            />
+            <span>
+              {d.name}
+              <small className="hint"> {describe(d)}</small>
+            </span>
+          </label>
+        );
+      })}
+      {custom.map((d) => (
+        <div key={d.code} className="custom-deck">
+          <span>
+            {d.name} ({d.code})<small className="hint"> {describe(d)}</small>
+          </span>
+          <button
+            className="small"
+            disabled={active.length === 1}
+            onClick={() => toggle(d.code, false)}
+          >
+            Togli
+          </button>
+        </div>
+      ))}
+      <form onSubmit={add} className="add-deck">
+        <label htmlFor="deck-code">Aggiungi un mazzo con il codice</label>
+        <div className="row">
+          <input
+            id="deck-code"
+            value={code}
+            onChange={(e) => setCode(e.target.value.toUpperCase())}
+            maxLength={6}
+            autoCapitalize="characters"
+            autoComplete="off"
+            className="code-input"
+          />
+          <button className="secondary" disabled={!/^[A-Z0-9]{6}$/.test(code)}>
+            Aggiungi
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
 

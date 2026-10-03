@@ -67,6 +67,18 @@ test('quattro telefoni giocano una partita completa', async ({ browser }) => {
   const pages = [host, ...others];
   await expect(host.getByRole('heading', { name: /In stanza \(4\/10\)/ })).toBeVisible();
 
+  // Il mazzo di casa è attivo di default; il mazzo base si può aggiungere e togliere.
+  const casa = host.getByRole('switch', { name: /Cards Against Cirelli/ });
+  const base = host.getByRole('switch', { name: /Mazzo base/ });
+  await expect(casa).toBeChecked();
+  await expect(casa).toBeDisabled();
+  await expect(base).not.toBeChecked();
+  await base.click();
+  await expect(base).toBeChecked();
+  await expect(casa).toBeEnabled();
+  await base.click();
+  await expect(base).not.toBeChecked();
+
   await host.getByLabel('Punti per vincere').selectOption('3');
   await host.getByRole('button', { name: 'Inizia la partita' }).click();
 

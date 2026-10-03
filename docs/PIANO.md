@@ -15,6 +15,12 @@
 
 Quindi: **client Vite + React** (TypeScript strict, Tailwind v4, Motion), **server Node** (HTTP + WebSocket con `ws`, stanze in memoria con istantanee su database), **SQL portabile** (SQLite in locale, Postgres in produzione tramite `DATABASE_URL`, migrazioni in SQL puro). Motore e protocollo non cambiano: se GPT Work preferisce un suo sistema realtime, deve solo implementare il protocollo documentato. Il pacchetto include `HANDOFF.md` per chi lo installa (variabili d'ambiente, schema del database, vincolo di una sola istanza o instradamento per codice stanza).
 
+### Mazzo predefinito (dopo la Fase 3)
+- Il mazzo attivo di default in ogni stanza è **Cards Against Cirelli**: le 191 carte bianche dei PDF del gruppo (192 meno un doppione), importate con `scripts/pdf-cards.py`.
+- Nei PDF ricevuti non ci sono carte nere: finché non arrivano, il mazzo usa come domande le 30 nere del mazzo base.
+- Il mazzo base originale resta attivabile in lobby; l'host può anche aggiungere mazzi custom con il codice (editor nella Fase 5).
+- A metà frase le risposte che iniziano con articolo, preposizione o verbo all'infinito passano in minuscolo; nomi propri e sigle restano.
+
 ## Contesto
 
 Repo `smitja/cardsagainst` vuoto (nessun commit). Obiettivo: party game in presenza, un telefono a testa, meccanica alla Cards Against Humanity con identità originale. Criterio di successo: sei amici aprono un link e giocano il primo round in meno di 60 secondi, senza account e senza spiegazioni.

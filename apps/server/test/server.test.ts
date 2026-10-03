@@ -2,7 +2,7 @@ import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { DEMO_DECK } from '@cirelli/decks';
+import { CIRELLI_DECK, DEMO_DECK } from '@cirelli/decks';
 import type { GameConfig } from '@cirelli/engine';
 import { startServer } from '../src/server.ts';
 import { MemoryStore, SqliteStore, type Store } from '../src/store.ts';
@@ -82,17 +82,24 @@ describe('API HTTP', () => {
 });
 
 describe('ingresso nella stanza', () => {
-  it('il primo giocatore diventa host e trova il mazzo demo già caricato', async () => {
+  it('il primo giocatore diventa host e trova il mazzo di casa già caricato', async () => {
     const { table } = await boot();
     const { players } = await table(1);
     const host = players[0] as TestClient;
     const v = host.latest;
     expect(host.token).toBeTruthy();
     expect(v.hostId).toBe(host.seat);
-    expect(v.deck).toEqual({ black: 30, white: 100 });
-    expect(host.latestState()?.room.decks).toEqual([
-      { code: 'demo', name: DEMO_DECK.name, black: 30, white: 100 },
+    expect(v.deck).toEqual({ black: CIRELLI_DECK.black.length, white: 191 });
+    const room = host.latestState()?.room;
+    expect(room?.decks).toEqual([
+      {
+        code: 'cirelli',
+        name: 'Cards Against Cirelli',
+        black: CIRELLI_DECK.black.length,
+        white: 191,
+      },
     ]);
+    expect(room?.available.map((d) => d.code)).toEqual(['cirelli', 'demo']);
   });
 
   it('rifiuta stanze inesistenti, nickname mancanti e token sconosciuti', async () => {
@@ -218,8 +225,14 @@ describe('partita via WebSocket', () => {
       ok: false,
       error: 'DECK_NOT_FOUND',
     });
+    expect(await host.ack({ type: 'setDecks', decks: ['boh'] })).toMatchObject({
+      ok: false,
+      error: 'DECK_NOT_FOUND',
+    });
+    expect((await host.ack({ type: 'setDecks', decks: ['cirelli', 'demo'] })).ok).toBe(true);
+    await host.view((v) => v.deck.white === 291);
     expect((await host.ack({ type: 'setDecks', decks: ['demo', 'AB12CD'] })).ok).toBe(true);
-    const s = await host.waitFor((m) => m.t === 'state' && m.room.decks.length === 2);
+    const s = await host.waitFor((m) => m.t === 'state' && m.room.decks[1]?.code === 'AB12CD');
     expect(s.t === 'state' && s.room.decks[1]).toMatchObject({ code: 'AB12CD', name: 'Extra' });
     // Le dieci bianche "extra" sono doppioni del demo: non si contano due volte.
     expect(host.latest.deck).toEqual({ black: 30, white: 100 });

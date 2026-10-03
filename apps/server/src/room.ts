@@ -1,5 +1,5 @@
 import { createHash, randomBytes, randomInt } from 'node:crypto';
-import { DEMO_DECK, combineDecks, type Deck } from '@cirelli/decks';
+import { BUILTIN_DECKS, DEFAULT_DECKS, combineDecks, type Deck } from '@cirelli/decks';
 import {
   createGame,
   nextWakeAt,
@@ -45,7 +45,7 @@ export class Room {
   rev = 0;
   seats = new Map<string, SeatId>();
   banned = new Set<string>();
-  decks: string[] = ['demo'];
+  decks: string[] = [...DEFAULT_DECKS];
   deckSummaries: DeckSummary[] = [];
   conns = new Set<Conn>();
   createdAt: number;
@@ -72,9 +72,10 @@ export class Room {
       this.createdAt = now;
     }
     this.lastActivity = now;
-    this.deckSummaries = this.decks.map((c) =>
-      c === 'demo' ? summary('demo', DEMO_DECK) : { code: c, name: c, black: 0, white: 0 },
-    );
+    this.deckSummaries = this.decks.map((c) => {
+      const builtin = BUILTIN_DECKS[c];
+      return builtin ? summary(c, builtin) : { code: c, name: c, black: 0, white: 0 };
+    });
   }
 
   /** Dopo un riavvio nessuno è davvero connesso: partono le tolleranze. */
@@ -150,7 +151,7 @@ export class Room {
     conn.send({ t: 'welcome', room: this.code, seat, token, serverNow: this.deps.now() });
     this.commit(res.state, res.events);
 
-    // Il primo host carica il mazzo demo, così si può iniziare subito.
+    // Il primo host carica i mazzi predefiniti, così si può iniziare subito.
     if (this.state.hostId === seat && Object.keys(this.state.cards.black).length === 0) {
       await this.loadDecks(seat, this.decks);
     }
@@ -200,7 +201,9 @@ export class Room {
     const unique = [...new Set(codes)];
     const decks: Deck[] = [];
     for (const code of unique) {
-      const deck = code === 'demo' ? DEMO_DECK : await this.deps.resolveDeck(code);
+      const deck =
+        BUILTIN_DECKS[code] ??
+        (/^[A-Z0-9]{6}$/.test(code) ? await this.deps.resolveDeck(code) : null);
       if (!deck) return 'DECK_NOT_FOUND';
       decks.push(deck);
     }
@@ -267,7 +270,7 @@ export class Room {
       t: 'state',
       rev: this.rev,
       view: viewFor(this.state, conn.seat),
-      room: { code: this.code, decks: this.deckSummaries },
+      room: { code: this.code, decks: this.deckSummaries, available: AVAILABLE },
     });
   }
 
@@ -325,6 +328,10 @@ export class Room {
     return this.conns.size === 0;
   }
 }
+
+const AVAILABLE: DeckSummary[] = Object.entries(BUILTIN_DECKS).map(([id, deck]) =>
+  summary(id, deck),
+);
 
 function summary(code: string, deck: Deck): DeckSummary {
   return { code, name: deck.name, black: deck.black.length, white: deck.white.length };

@@ -46,7 +46,7 @@ describe('messaggi del client', () => {
       parseClientMessage({
         t: 'intent',
         seq: 1,
-        intent: { type: 'setDecks', decks: ['demo', 'AB12CD'] },
+        intent: { type: 'setDecks', decks: ['cirelli', 'demo', 'AB12CD'] },
       }),
     ).not.toBeNull();
     expect(
@@ -70,7 +70,7 @@ describe('messaggi del client', () => {
       { t: 'intent', seq: 1, intent: { type: 'play', cards: [] } },
       { t: 'intent', seq: 1, intent: { type: 'boh' } },
       { t: 'intent', seq: 1, intent: { type: 'setConfig', config: { dealMs: 0 } } },
-      { t: 'intent', seq: 1, intent: { type: 'setDecks', decks: ['minuscolo'] } },
+      { t: 'intent', seq: 1, intent: { type: 'setDecks', decks: ['Maiuscolo'] } },
       { t: 'intent', seq: 1, intent: { type: 'reveal', index: 1.5 } },
     ];
     for (const b of bad) expect(parseClientMessage(b)).toBeNull();

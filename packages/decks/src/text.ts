@@ -36,12 +36,31 @@ export function segmentsOf(text: string): Segment[] {
 
 const SENTENCE_START = /(^|[.!?…]\s*)$/;
 
-/** Adatta una risposta al punto in cui va inserita: maiuscola a inizio frase, niente punto finale in mezzo. */
+/**
+ * Parole iniziali che a metà frase vanno in minuscolo: articoli, preposizioni articolate,
+ * determinanti e verbi all'infinito ("Brindare", "Farsi", "Essere"). I nomi propri restano.
+ */
+const LOWERABLE_START =
+  /^(?:il|lo|la|i|gli|le|un|uno|una|l|un|dei|degli|delle|del|dello|della|al|allo|alla|ai|agli|alle|nel|nella|nei|nelle|qualunque|qualche|ogni|tutti|tutte|tutto|tutta|mio|mia|tuo|tua|suo|sua|questo|questa|quel|quella|[a-zà-ù]+(?:are|ere|ire|arsi|ersi|irsi|arla|arlo|arle|arli|erla|erlo|irla|irlo|arne|erne|irne|arci|erci|irci|argli|ergli|irgli))$/;
+
+function lowerFirstIfCommon(text: string): string {
+  const first = /^[\p{L}]+/u.exec(text)?.[0] ?? '';
+  if (!first || first.length < 1) return text;
+  const rest = first.slice(1);
+  // Sigle e nomi tutti maiuscoli (KKK, CISL) restano come sono.
+  if (rest && rest === rest.toLocaleUpperCase('it')) return text;
+  const lower = first.toLocaleLowerCase('it');
+  if (!LOWERABLE_START.test(lower)) return text;
+  return lower + text.slice(first.length);
+}
+
+/** Adatta una risposta al punto in cui va inserita: maiuscola a inizio frase, minuscola in mezzo, niente punto finale in mezzo. */
 export function fitAnswer(answer: string, before: string, after: string): string {
   let a = normalizeCardText(answer);
   if (after.trim() !== '' && !/^[.!?…]/.test(after.trim())) a = a.replace(/[.]$/, '');
   else if (after.trim() !== '') a = a.replace(/[.!?]$/, '');
   if (SENTENCE_START.test(before)) a = a.charAt(0).toLocaleUpperCase('it') + a.slice(1);
+  else a = lowerFirstIfCommon(a);
   return a;
 }
 

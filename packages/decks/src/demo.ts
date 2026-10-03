@@ -4,9 +4,9 @@ import { DeckSchema, type Deck, type DeckInput } from './schema.ts';
 const raw: DeckInput = {
   schemaVersion: 1,
   id: 'demo',
-  name: 'Il mazzo della casa',
+  name: 'Mazzo base',
   language: 'it',
-  description: 'Trenta nere e cento bianche per cominciare subito.',
+  description: 'Trenta nere e cento bianche originali, più tranquille.',
   black: [
     { text: 'Il mio terapeuta dice che il problema non sono io, ma ___.' },
     { text: 'Alla riunione di condominio è stato messo ai voti ___.' },

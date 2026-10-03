@@ -8,6 +8,8 @@ import { PROTOCOL_VERSION } from './version.ts';
 const id = z.string().min(1).max(64);
 const roomCode = z.string().regex(ROOM_CODE_RE);
 export const DeckCodeSchema = z.string().regex(/^[A-Z0-9]{6}$/);
+/** Mazzi inclusi nel gioco: id in minuscolo ("cirelli", "demo"). */
+export const BuiltinDeckIdSchema = z.string().regex(/^[a-z][a-z0-9-]{1,23}$/);
 
 export const ConfigPatchSchema = z
   .object({
@@ -34,7 +36,7 @@ export const IntentSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('setDecks'),
     decks: z
-      .array(z.union([z.literal('demo'), DeckCodeSchema]))
+      .array(z.union([BuiltinDeckIdSchema, DeckCodeSchema]))
       .min(1)
       .max(10),
   }),
@@ -92,6 +94,8 @@ export interface DeckSummary {
 export interface RoomInfo {
   code: string;
   decks: DeckSummary[];
+  /** Mazzi inclusi nel gioco, attivabili in lobby. */
+  available: DeckSummary[];
 }
 
 export type ServerMessage =
