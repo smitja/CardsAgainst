@@ -10,11 +10,11 @@ import {
 } from '../src/index.ts';
 
 describe('mazzo di casa', () => {
-  it('è il mazzo predefinito, con le 191 bianche dei PDF senza doppioni', () => {
+  it('è il mazzo predefinito, con le 202 bianche dei PDF senza doppioni', () => {
     expect(DEFAULT_DECKS).toEqual(['cirelli']);
     expect(BUILTIN_DECKS.cirelli).toBe(CIRELLI_DECK);
-    expect(CIRELLI_DECK.white).toHaveLength(191);
-    expect(new Set(CIRELLI_DECK.white.map((c) => dedupeKey(c.text))).size).toBe(191);
+    expect(CIRELLI_DECK.white).toHaveLength(202);
+    expect(new Set(CIRELLI_DECK.white.map((c) => dedupeKey(c.text))).size).toBe(202);
     expect(CIRELLI_DECK.black.length).toBeGreaterThanOrEqual(30);
   });
 
@@ -26,7 +26,7 @@ describe('mazzo di casa', () => {
 
   it('si combina con il mazzo base senza duplicare le nere', () => {
     const cards = combineDecks([CIRELLI_DECK, BUILTIN_DECKS.demo as typeof CIRELLI_DECK]);
-    expect(cards.white).toHaveLength(291);
+    expect(cards.white).toHaveLength(302);
     expect(cards.black).toHaveLength(CIRELLI_DECK.black.length);
   });
 });

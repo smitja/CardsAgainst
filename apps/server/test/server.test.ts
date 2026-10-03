@@ -89,14 +89,14 @@ describe('ingresso nella stanza', () => {
     const v = host.latest;
     expect(host.token).toBeTruthy();
     expect(v.hostId).toBe(host.seat);
-    expect(v.deck).toEqual({ black: CIRELLI_DECK.black.length, white: 191 });
+    expect(v.deck).toEqual({ black: CIRELLI_DECK.black.length, white: 202 });
     const room = host.latestState()?.room;
     expect(room?.decks).toEqual([
       {
         code: 'cirelli',
         name: 'Cards Against Cirelli',
         black: CIRELLI_DECK.black.length,
-        white: 191,
+        white: 202,
       },
     ]);
     expect(room?.available.map((d) => d.code)).toEqual(['cirelli', 'demo']);
@@ -230,7 +230,7 @@ describe('partita via WebSocket', () => {
       error: 'DECK_NOT_FOUND',
     });
     expect((await host.ack({ type: 'setDecks', decks: ['cirelli', 'demo'] })).ok).toBe(true);
-    await host.view((v) => v.deck.white === 291);
+    await host.view((v) => v.deck.white === 302);
     expect((await host.ack({ type: 'setDecks', decks: ['demo', 'AB12CD'] })).ok).toBe(true);
     const s = await host.waitFor((m) => m.t === 'state' && m.room.decks[1]?.code === 'AB12CD');
     expect(s.t === 'state' && s.room.decks[1]).toMatchObject({ code: 'AB12CD', name: 'Extra' });
